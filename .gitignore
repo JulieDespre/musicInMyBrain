@@ -1,6 +1,7 @@
 .idea/
 *.log
 **/vendor/
-**/node-modules/ 
+**/node-modules/
+/api/ws_geoquizz/node_modules
 **/.vscode/
-./api/rabbitmq
+/api/rabbitmq/
