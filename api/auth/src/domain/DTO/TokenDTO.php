@@ -1,6 +1,6 @@
 <?php
 
-namespace geoquizz\auth\domain\dto;
+namespace geoquizz\auth\domain\DTO;
 
 class TokenDTO extends DTO {
     public string $refreshToken;

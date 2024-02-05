@@ -1,8 +1,9 @@
 <?php
 
-use pizzashop\auth\api\app\actions\SignInAction;
-use pizzashop\auth\api\app\actions\ValiderTokenJWTAction;
-use pizzashop\auth\api\app\actions\UserRefreshAction;
+
+use geoquizz\auth\app\actions\SignInAction;
+use geoquizz\auth\app\actions\UserRefreshAction;
+use geoquizz\auth\app\actions\ValiderTokenJWTAction;
 use Psr\Container\ContainerInterface;
 
 return [

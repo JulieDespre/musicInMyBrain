@@ -1,8 +1,8 @@
 <?php
 
-use pizzashop\auth\api\app\auth\managers\JwtManager;
-use pizzashop\auth\api\app\auth\providers\AuthProvider;
-use pizzashop\auth\api\domain\service\AuthService;
+use geoquizz\auth\app\auth\managers\JwtManager;
+use geoquizz\auth\app\auth\providers\AuthProvider;
+use geoquizz\auth\domain\service\AuthService;
 use Psr\Container\ContainerInterface;
 
 return[
