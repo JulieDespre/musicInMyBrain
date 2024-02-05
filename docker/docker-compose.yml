@@ -1,8 +1,188 @@
- 
-version: '3'
+version: '3.5'
+name: 'geoquizz'
 networks:
-  xx.net:
+  geoquizz.net:
     driver: bridge
+
 services:
 
- 
+  #############################
+  ### Gateway               ###
+  #############################
+
+  gateway:
+    image: 'canals/php:8.2'
+    env_file: ./auth.env
+    ports:
+      - '35200:80'
+    volumes:
+      - ../api/gateway:/var/www/html
+    working_dir: /var/www
+    networks:
+      - geoquizz.net
+    depends_on:
+      - auth_db
+
+  #############################
+  ### WS GeoQuizz           ###
+  #############################
+
+  ws_geoquizz:
+    image: 'node:alpine'
+    ports:
+      - '35201:3000'
+    networks:
+      - geoquizz.net
+    env_file: ./ws_geoquizz.env
+    command: sh -c "npm i && npm run watch"
+    volumes:
+      - ../api/ws_geoquizz:/app
+    working_dir: /app
+
+  #############################
+  ### Adminer              ###
+  #############################
+
+  adminer:
+    image: adminer
+    ports:
+      - '35202:8080'
+    networks:
+      - geoquizz.net
+
+  ########################################
+  # Broker de message RabbitMQ #
+  ########################################
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - '35203:15672' #interface web de gestion et administration
+      - '35204:5672' #api pour publier et consommer des messages
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 8s
+      timeout: 30s
+      retries: 3
+    networks:
+      - geoquizz.net
+    volumes:
+      - ../api/rabbitmq:/var/lib/rabbitmq
+    env_file: ./rab.env
+
+
+  #############################
+  ### AUTH                 ###
+  #############################
+
+  auth_php:
+    image: 'canals/php:8.2'
+    env_file: ./auth.env
+    ports:
+      - '35205:80'
+    volumes:
+      - ../auth:/var/www/html
+    working_dir: /var/www
+    networks:
+      - geoquizz.net
+    depends_on:
+      - auth_db
+
+  auth_db:
+    image: 'mariadb:latest'
+    command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci'
+    env_file: ./auth_db.env
+    ports:
+      - '35207:3306'
+    networks:
+      - geoquizz.net
+    volumes:
+      - ./data/auth_database:/var/lib/mysql
+
+
+  #############################
+  ### Service Geoquizz      ###
+  #############################
+
+  service_geoquizz_php:
+    image: 'canals/php:8.2'
+    env_file: ./auth.env
+    ports:
+      - '35206:80'
+    volumes:
+      - ../auth:/var/www/html
+    working_dir: /var/www
+    networks:
+      - geoquizz.net
+    depends_on:
+      - auth_db
+
+  service_geoquizz_db:
+    image: 'postgres:latest'
+    env_file: ./auth_db.env
+    ports:
+      - '35208:5432'
+    networks:
+      - geoquizz.net
+    volumes:
+      - ./data/auth_database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "geoquizz"
+      POSTGRES_PASSWORD: "geoquizz"
+      POSTGRES_DB: "geoquizz"
+
+  #############################
+  ### Web with Apache ###
+  #############################
+
+  web:
+    image: httpd:latest
+    ports:
+      - "35209:80"
+    environment:
+      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
+      - https_proxy=http://www-cache-iutnc.univ-lorraine.fr:3128
+    volumes:
+      - ../web/build:/usr/local/apache2/htdocs/
+    networks:
+      - geoquizz
+
+  #############################
+  ### DIRECTUS ###
+  #############################
+
+  database:
+    image: postgis/postgis:13-master
+    volumes:
+      - ./data/database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "directus"
+      POSTGRES_PASSWORD: "directus"
+      POSTGRES_DB: "directus"
+
+  cache:
+    image: redis:6
+
+  directus:
+    image: directus/directus:10.8.3
+    ports:
+      - '35210:8055'
+    volumes:
+      - ./uploads:/directus/uploads
+    depends_on:
+      - cache
+      - database
+    environment:
+      KEY: "255d861b-5ea1-5996-9aa3-922530ec40b1"
+      SECRET: "6116487b-cda1-52c2-b5b5-c8022c45e263"
+      DB_CLIENT: "pg"
+      DB_HOST: "database"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: "directus"
+      CACHE_ENABLED: "true"
+      CACHE_STORE: "redis"
+      REDIS: "redis://cache:6379"
+      ADMIN_EMAIL: "admin@example.com"
+      ADMIN_PASSWORD: "d1r3ctu5"
