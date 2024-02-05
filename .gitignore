@@ -3,3 +3,4 @@
 **/vendor/
 **/node-modules/ 
 **/.vscode/
+./api/rabbitmq
