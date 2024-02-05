@@ -15,6 +15,7 @@ use geoquizz\auth\domain\exception\ActivationTokenExpiredException;
 use geoquizz\auth\domain\exception\AuthServiceExpiredTokenException;
 use geoquizz\auth\domain\exception\AuthServiceInvalideDonneeException;
 use geoquizz\auth\domain\exception\AuthServiceInvalideTokenException;
+use geoquizz\auth\domain\exception\EmailFormatException;
 use geoquizz\auth\domain\exception\InvalidActivationTokenException;
 use geoquizz\auth\domain\exception\JwtExpiredException;
 use geoquizz\auth\domain\exception\JwtInvalidException;
@@ -30,36 +31,23 @@ class AuthService implements AuthServiceInterface {
 
     /**
      * @inheritDoc
+     * @throws EmailFormatException
      */
     public function signup(CredentialsDTO $credentialsDTO): UserDTO {
-        try {
-            $activationToken = bin2hex(random_bytes(32));
-            $refreshToken = bin2hex(random_bytes(32));
-            $resetPasswordToken = bin2hex(random_bytes(32));
-
-            // Créer un nouvel utilisateur avec les informations de CredentialsDTO
-            $user = new Users();
-            $user->email = $credentialsDTO->email;
-            $user->password = password_hash($credentialsDTO->password, PASSWORD_BCRYPT);
-            $user->username = $credentialsDTO->username;
-            $user->active = false;
-            $user->activation_token = $activationToken;
-            $user->activation_token_expiration_date = (new DateTime())->format('Y-m-d H:i:s');
-            $user->refresh_token = $refreshToken;
-            $user->refresh_token_expiration_date = (new DateTime())->format('Y-m-d H:i:s');
-            $user->reset_password_token = $resetPasswordToken;
-            $user->reset_password_token_expiration_date = (new DateTime())->format('Y-m-d H:i:s');
-            $user->save();
-
-            // Retourner un objet UserDTO avec les trois jetons générés
-            return new UserDTO(
-                $user->email,
-                $user->username,
-            );
-        } catch (Exception $e) {
-            // Gérer les exceptions, par exemple, en lançant une exception personnalisée
-            throw new AuthServiceInvalideDonneeException();
+        //sanitize
+        $email = filter_var($credentialsDTO->email, FILTER_SANITIZE_EMAIL);
+        //validate
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+            throw new EmailFormatException();
         }
+
+        $nom = filter_var($credentialsDTO->nom, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z]+$/")));
+        $prenom = filter_var($credentialsDTO->prenom, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z]+$/")));
+
+
+        $this->authProvider->register($email, $credentialsDTO->mdp, $nom, $prenom);
+        $us = $this->authProvider->getAuthenticatedUser($credentialsDTO->email);
+        return new UserDTO($us['email'], $us['nom'], $us['prenom'], $us['typeUtil']);
     }
 
     /**
@@ -113,12 +101,5 @@ class AuthService implements AuthServiceInterface {
         } else {
             throw new InvalidActivationTokenException();
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function reset_password(TokenDTO $tokenDTO, CredentialsDTO $credentialsDTO): void {
-        // TODO: Implement reset_password() method.
     }
 }

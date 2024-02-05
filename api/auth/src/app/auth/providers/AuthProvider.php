@@ -14,7 +14,10 @@ use geoquizz\auth\domain\exception\AuthServiceInvalideDonneeException;
 use geoquizz\auth\domain\exception\CredentialsException;
 use geoquizz\auth\domain\exception\RefreshTokenInvalideException;
 use geoquizz\auth\domain\exception\RefreshUtilisateurException;
+use geoquizz\auth\domain\exception\RegisterExistException;
+use geoquizz\auth\domain\exception\RegisterValueException;
 use geoquizz\auth\domain\exception\SignInException;
+use Random\RandomException;
 
 class AuthProvider
 {
@@ -30,19 +33,6 @@ class AuthProvider
             }
         } catch (Exception $e) {
             throw new CredentialsException();
-        }
-    }
-
-    public function register(string $user, string $pass): void
-    {
-        try {
-            $credentialsDTO = new CredentialsDTO();
-            $credentialsDTO->email = $user;
-            $credentialsDTO->password = $pass;
-
-            $this->authService->signup($credentialsDTO);
-        } catch (Exception $e) {
-            throw new AuthServiceInvalideDonneeException();
         }
     }
 
@@ -119,6 +109,32 @@ class AuthProvider
             }
         }
 
+    }
+
+    /**
+     * @throws RegisterExistException
+     * @throws RegisterValueException
+     * @throws RandomException
+     */
+    public function register(string $email, string $mdp, string $pseudo): void {
+        if (Users::where('email', $email)->exists()) {
+            throw new RegisterExistException();
+        }
+        if ($email == '' || $mdp == '' || $pseudo == '') {
+            throw new RegisterValueException();
+        } else {
+            $now = new DateTime('now', new DateTimeZone('Europe/Paris'));
+            $refreshTokenExpDate = $now->modify('+1 hour');
+
+            $utilisateur = new Users();
+            $utilisateur->email = $email;
+            $utilisateur->mdp = password_hash($mdp, PASSWORD_BCRYPT);
+            $utilisateur->username = $pseudo;
+            $utilisateur->typeUtil = 1;
+            $utilisateur->refresh_token = bin2hex(random_bytes(32));
+            $utilisateur->refresh_token_expiration_date = $refreshTokenExpDate->format('Y-m-d H:i:s');
+            $utilisateur->save();
+        }
     }
 
 }
