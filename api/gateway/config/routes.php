@@ -2,15 +2,23 @@
 declare(strict_types=1);
 
 
-use pizzashop\gate\app\actions\authentification\MethodAuthentificationAction;
-use pizzashop\gate\app\actions\catalogue\GetCatalogue;
-use pizzashop\gate\app\actions\commande\AccederCommandeAction;
-use pizzashop\gate\app\actions\commande\CreerCommandeAction;
-use pizzashop\gate\app\actions\commande\ValiderCommandeAction;
+use geoquizz\gate\app\actions\authentification\MethodAuthentificationAction;
 
 return function(\Slim\App $app):void {
 
 
+    //AUTH
+    $app->post("/signin", MethodAuthentificationAction::class)
+        ->setName("signIn");
+
+    $app->post("/signup", MethodAuthentificationAction::class)
+        ->setName("signUn");
+
+    $app->post('/users/refresh', MethodAuthentificationAction::class)
+        ->setName('refreshUser');
+
+    $app->get('/users/validate', MethodAuthentificationAction::class)
+        ->setName('validateTokenJWT');
 
     //CORS
     $app->options('/{routes:.+}', function ($request, $response, $args) {
