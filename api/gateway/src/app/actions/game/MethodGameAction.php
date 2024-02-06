@@ -1,6 +1,6 @@
 <?php
 
-namespace geoquizz\gate\app\actions\authentification;
+namespace geoquizz\gate\app\actions\game;
 
 use geoquizz\gate\app\actions\AbstractAction;
 use geoquizz\gate\client\ClientApi;

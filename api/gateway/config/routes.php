@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 
 use geoquizz\gate\app\actions\authentification\MethodAuthentificationAction;
-use geoquizz\gate\app\actions\authentification\MethodGameAction;
+use geoquizz\gate\app\actions\game\MethodGameAction;
 
 return function(\Slim\App $app):void {
 

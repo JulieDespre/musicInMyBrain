@@ -2,7 +2,7 @@
 
 
 use geoquizz\gate\app\actions\authentification\MethodAuthentificationAction;
-use geoquizz\gate\app\actions\authentification\MethodGameAction;
+use geoquizz\gate\app\actions\game\MethodGameAction;
 use Psr\Container\ContainerInterface;
 
 return[
