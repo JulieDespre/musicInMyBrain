@@ -18,10 +18,9 @@ class SignUpAction extends AbstractAction {
         $this->authService = $s;
     }
 
-    public
-    function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface {
-        $data = $request->getParsedBody();
-        if (isset($data['email']) && isset($data['mdp']) && isset($data['pseudo'])) {
+        public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface {
+            $data = $request->getParsedBody();
+            if (isset($data['email']) && isset($data['mdp']) && isset($data['pseudo'])) {
             $email = $data['email'];
             $mdp = $data['mdp'];
             $pseudo = $data['pseudo'];

@@ -12,7 +12,7 @@ return function(\Slim\App $app):void {
         ->setName("signIn");
 
     $app->post("/signup", MethodAuthentificationAction::class)
-        ->setName("signUn");
+        ->setName("signUp");
 
     $app->post('/users/refresh', MethodAuthentificationAction::class)
         ->setName('refreshUser');

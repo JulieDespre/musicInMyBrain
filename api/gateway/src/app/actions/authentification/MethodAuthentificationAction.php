@@ -20,11 +20,12 @@ class MethodAuthentificationAction extends AbstractAction {
         $headers = $request->getHeaders();
         $method = $request->getMethod();
         $uri = $request->getUri()->getPath();
+        $body = $request->getParsedBody();
         if ($method == 'GET'){
-            $data = $this->client->get($uri,null,$headers);
+            $data = $this->client->get($uri,$body,$headers);
         }
         if ($method == 'POST'){
-            $data = $this->client->post($uri,null,$headers);
+            $data = $this->client->post($uri,$body,$headers);
         }
         $response->getBody()->write($data);
         return $response->withHeader('Content-Type', 'application/json');
