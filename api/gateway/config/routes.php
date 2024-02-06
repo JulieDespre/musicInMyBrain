@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use geoquizz\gate\app\actions\authentification\MethodAuthentificationAction;
 use geoquizz\gate\app\actions\game\MethodGameAction;
+use geoquizz\gate\app\actions\localisation\MethodLocalAction;
 
 return function(\Slim\App $app):void {
 
@@ -35,6 +36,16 @@ return function(\Slim\App $app):void {
     $app->post("/games/create",MethodGameAction::class);
 
     $app->post("/games/play",MethodGameAction::class);
+
+    $app->get("/items/serie", MethodLocalAction::class);
+
+    $app->get("/items/serie/{id}", MethodLocalAction::class);
+
+    $app->get("/items/localisation", MethodLocalAction::class);
+
+    $app->get("/items/localisation/{id}", MethodLocalAction::class);
+
+    $app->get("/assets/{id}", MethodLocalAction::class);
 
     //CORS
     $app->options('/{routes:.+}', function ($request, $response, $args) {

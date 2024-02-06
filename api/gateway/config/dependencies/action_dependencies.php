@@ -3,6 +3,7 @@
 
 use geoquizz\gate\app\actions\authentification\MethodAuthentificationAction;
 use geoquizz\gate\app\actions\game\MethodGameAction;
+use geoquizz\gate\app\actions\localisation\MethodLocalAction;
 use Psr\Container\ContainerInterface;
 
 return[
@@ -14,5 +15,11 @@ return[
     MethodGameAction::class => function (ContainerInterface $c){
         return new MethodGameAction($c->get('game.client'));
     },
+
+    MethodLocalAction::class => function (ContainerInterface $c){
+        return new MethodLocalAction($c->get('localisation.client'));
+    },
+
+
 
 ];

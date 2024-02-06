@@ -37,18 +37,7 @@ class ClientApi
             return json_encode($responseData, JSON_PRETTY_PRINT);
 
         } catch (GuzzleException | RequestException $e) {
-            if ($e->hasResponse()) {
-                $response = $e->getResponse();
-                $statusCode = $response->getStatusCode();
-
-                $body = $response->getBody()->getContents();
-                $response = json_decode($body, JSON_PRETTY_PRINT);
-
-                return json_encode($response, JSON_PRETTY_PRINT);
-
-            } else {
-                return "Erreur de communication : " . $e->getMessage();
-            }
+            return $e;
         }
     }
 
