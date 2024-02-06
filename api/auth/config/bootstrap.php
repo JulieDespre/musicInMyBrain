@@ -2,7 +2,7 @@
 
 use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as DB;
-use pizzashop\auth\api\domain\exception\JwtSecretEcritureException;
+use geoquizz\auth\domain\exception\JwtSecretEcritureException;
 use Slim\Factory\AppFactory;
 
 session_start();

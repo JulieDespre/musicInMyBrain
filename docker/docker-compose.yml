@@ -16,7 +16,8 @@ services:
     ports:
       - '35200:80'
     volumes:
-      - ../api/gateway:/var/www/html
+      - ../api/gateway:/var/www/
+      - ../api/gateway/public:/var/www/html
     working_dir: /var/www
     networks:
       - geoquizz.net
@@ -78,7 +79,9 @@ services:
     ports:
       - '35205:80'
     volumes:
-      - ../api/auth:/var/www/html
+      - ../api/auth:/var/www/
+      - ../api/auth/public:/var/www/html
+      - ./auth.env:/config/.env
     working_dir: /var/www
     networks:
       - geoquizz.net
