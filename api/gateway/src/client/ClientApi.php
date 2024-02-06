@@ -53,17 +53,15 @@ class ClientApi
     }
 
 
-    public function post($url, $data = [], $headers = [])
+    public function post($url, $data = [], $headers = [], $form = [])
     {
         try {
-            // Créez un tableau d'options pour la requête POST
             $options = [
-                'json' => $data,
-                'headers' => $headers, // Ajoutez les en-têtes reçus de l'API 1
+                'form_params' => $data,
+                'headers' => $headers,
             ];
 
             $response = $this->client->post($url, $options);
-
 
             return $response->getBody()->getContents();
 
@@ -73,7 +71,7 @@ class ClientApi
                 $statusCode = $response->getStatusCode();
                 return $response->getBody()->getContents();
             } else {
-                return "Erreur de communication : " . $e->getMessage();
+                echo "Erreur de communication : " . $e->getMessage();
             }
         }
     }
