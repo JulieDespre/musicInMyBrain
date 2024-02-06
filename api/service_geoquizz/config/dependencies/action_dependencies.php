@@ -1,23 +1,25 @@
 <?php
 
 
-use pizzashop\cat\app\actions\GetProduitByCategorieAction;
-use pizzashop\cat\app\actions\GetProduitByIdAction;
-use pizzashop\cat\app\actions\GetProduitsAction;
+use geoquizz\service\app\actions\GetProfilAction;
+use geoquizz\service\app\actions\SetProfilAction;
+use geoquizz\service\app\actions\GetSerieAction;
+use geoquizz\service\app\actions\GetSerieByIdAction;
+use geoquizz\service\app\actions\GetHistoryAction;
 use Psr\Container\ContainerInterface;
 
 return[
 
-    GetProduitsAction::class => function (ContainerInterface $c){
-        return new GetProduitsAction($c->get('catalogue.service'));
+    GetSerieAction::class => function (ContainerInterface $c){
+        return new GetSerieAction($c->get('serie.service'));
     },
 
-    GetProduitByIdAction::class => function (ContainerInterface $c){
-        return new GetProduitByIdAction($c->get('catalogue.service'));
+    GetSerieByIdAction::class => function (ContainerInterface $c){
+        return new GetSerieByIdAction($c->get('serie.service'));
     },
 
-    GetProduitByCategorieAction::class => function (ContainerInterface $c){
-        return new GetProduitByCategorieAction($c->get('catalogue.service'));
+    GetHistoryAction::class => function (ContainerInterface $c){
+        return new GetHistoryAction($c->get('partie.service'));
     },
 
 ];

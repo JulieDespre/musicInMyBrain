@@ -105,7 +105,8 @@ services:
     ports:
       - '35206:80'
     volumes:
-      - ../api/service_geoquizz:/var/www/html
+      - ../api/service_geoquizz:/var/www
+      - ../api/service_geoquizz/public:/var/www/html
     working_dir: /var/www
     networks:
       - geoquizz.net
@@ -140,6 +141,8 @@ services:
 
   directus_db:
     image: postgis/postgis:13-master
+    networks:
+      - geoquizz.net
     env_file:
       - directus_db.env
     ports:
@@ -149,12 +152,16 @@ services:
 
   cache:
       image: redis:6
+      networks:
+        - geoquizz.net
       ports:
         - '35212:8055'
 
 
   directus:
       image: directus/directus:10.8.3
+      networks:
+        - geoquizz.net
       env_file:
         - directus.env
       ports:

@@ -10,4 +10,8 @@ return [
         return new ClientApi(['base_uri' => 'http://auth_php', 'timeout' => 5.0]);
     },
 
+    'game.client' => function (ContainerInterface $c) {
+        return new ClientApi(['base_uri' => 'http://service_geoquizz_php', 'timeout' => 5.0]);
+    },
+
 ];

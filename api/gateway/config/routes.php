@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 
 use geoquizz\gate\app\actions\authentification\MethodAuthentificationAction;
+use geoquizz\gate\app\actions\authentification\MethodGameAction;
 
 return function(\Slim\App $app):void {
 
@@ -19,6 +20,21 @@ return function(\Slim\App $app):void {
 
     $app->get('/users/validate', MethodAuthentificationAction::class)
         ->setName('validateTokenJWT');
+
+    //GAME
+
+    $app->get('/serie[/]', MethodGameAction::class)
+        ->setName('getserie');
+
+    $app->get('/serie/{id_serie}[/]', MethodGameAction::class)
+        ->setName('getidserie');
+
+    $app->get('/historique[/]', MethodGameAction::class)
+        ->setName('historique');
+
+    $app->post("/games/create",MethodGameAction::class);
+
+    $app->post("/games/play",MethodGameAction::class);
 
     //CORS
     $app->options('/{routes:.+}', function ($request, $response, $args) {

@@ -30,7 +30,7 @@ $app->setBasePath('');
 
 // initialise Eloquent avec les fichiers de config
 $db = new DB();
-$db->addConnection(parse_ini_file('catalog.db.ini'), 'catalog');
+$db->addConnection(parse_ini_file('geoquizz.db.ini'), 'geoquizz');
 $db->setAsGlobal();
 $db->bootEloquent();
 
