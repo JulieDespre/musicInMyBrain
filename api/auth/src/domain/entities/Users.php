@@ -8,7 +8,8 @@ class Users extends Model
 {
     protected $connection = 'auth';
     protected $table = 'users';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'email';
+    protected $keyType = 'string';
     public $timestamps = false;
     public function toDTO():UserDTO
     {
