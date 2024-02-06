@@ -2,7 +2,7 @@
 
 namespace geoquizz\auth\app\actions;
 
-use geoquizz\auth\domain\dto\CredentialsDTO;
+use geoquizz\auth\domain\DTO\CredentialsDTO;
 use geoquizz\auth\domain\exception\EmailFormatException;
 use geoquizz\auth\domain\exception\RegisterExistException;
 use geoquizz\auth\domain\exception\RegisterValueException;

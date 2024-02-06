@@ -47,12 +47,4 @@ interface AuthServiceInterface {
      */
     public function activate_signup(TokenDTO $tokenDTO) : void;
 
-    /**
-     * Réinitialise le mot de passe de l'utilisateur
-     *
-     * @param TokenDTO $tokenDTO jwt de l'utilisateur
-     * @param CredentialsDTO $credentialsDTO les nouveaux identifiants de l'utilisateur
-     * @return void
-     */
-    public function reset_password(TokenDTO $tokenDTO, CredentialsDTO $credentialsDTO) : void;
 }

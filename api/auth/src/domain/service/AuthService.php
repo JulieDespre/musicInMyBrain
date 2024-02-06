@@ -4,16 +4,14 @@ namespace geoquizz\auth\domain\service;
 
 use DateTime;
 use DomainException;
-use Exception;
 use geoquizz\auth\app\auth\managers\JwtManager;
 use geoquizz\auth\app\auth\providers\AuthProvider;
 use geoquizz\auth\domain\dto\CredentialsDTO;
 use geoquizz\auth\domain\dto\TokenDTO;
-use geoquizz\auth\domain\dto\UserDTO;
+use geoquizz\auth\domain\DTO\UserDTO;
 use geoquizz\auth\domain\entities\Users;
 use geoquizz\auth\domain\exception\ActivationTokenExpiredException;
 use geoquizz\auth\domain\exception\AuthServiceExpiredTokenException;
-use geoquizz\auth\domain\exception\AuthServiceInvalideDonneeException;
 use geoquizz\auth\domain\exception\AuthServiceInvalideTokenException;
 use geoquizz\auth\domain\exception\EmailFormatException;
 use geoquizz\auth\domain\exception\InvalidActivationTokenException;
@@ -41,13 +39,12 @@ class AuthService implements AuthServiceInterface {
             throw new EmailFormatException();
         }
 
-        $nom = filter_var($credentialsDTO->nom, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z]+$/")));
-        $prenom = filter_var($credentialsDTO->prenom, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z]+$/")));
+
+        $username = filter_var($credentialsDTO->username, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z]+$/")));
 
 
-        $this->authProvider->register($email, $credentialsDTO->mdp, $nom, $prenom);
-        $us = $this->authProvider->getAuthenticatedUser($credentialsDTO->email);
-        return new UserDTO($us['email'], $us['nom'], $us['prenom'], $us['typeUtil']);
+        $this->authProvider->register($email, $credentialsDTO->password, $username);
+        return new UserDTO($email,$username);
     }
 
     /**

@@ -7,8 +7,7 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use geoquizz\auth\app\auth\managers\JwtManager;
-use geoquizz\auth\domain\dto\CredentialsDTO;
-use geoquizz\auth\domain\dto\TokenDTO;
+use geoquizz\auth\domain\DTO\TokenDTO;
 use geoquizz\auth\domain\entities\Users;
 use geoquizz\auth\domain\exception\AuthServiceInvalideDonneeException;
 use geoquizz\auth\domain\exception\CredentialsException;
@@ -128,9 +127,8 @@ class AuthProvider
 
             $utilisateur = new Users();
             $utilisateur->email = $email;
-            $utilisateur->mdp = password_hash($mdp, PASSWORD_BCRYPT);
+            $utilisateur->password = password_hash($mdp, PASSWORD_BCRYPT);
             $utilisateur->username = $pseudo;
-            $utilisateur->typeUtil = 1;
             $utilisateur->refresh_token = bin2hex(random_bytes(32));
             $utilisateur->refresh_token_expiration_date = $refreshTokenExpDate->format('Y-m-d H:i:s');
             $utilisateur->save();
