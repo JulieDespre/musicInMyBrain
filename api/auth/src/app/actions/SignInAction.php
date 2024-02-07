@@ -33,6 +33,7 @@ class SignInAction extends AbstractAction
                 $token = $this->authService->signin(new CredentialsDTO($email,$password));
                     $data = [
                         'access_token' => $token->jwt,
+                        'expiration' => 43200,
                         'refresh_token' => $token->refreshToken,
                     ];
 
