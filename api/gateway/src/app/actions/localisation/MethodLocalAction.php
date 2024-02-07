@@ -11,9 +11,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class MethodLocalAction extends AbstractAction {
 
 
-    private ClientApi $client;
+    private Client $client;
 
-    public function __construct(ClientApi $c) {
+    public function __construct(Client $c) {
         $this->client = $c;
     }
 

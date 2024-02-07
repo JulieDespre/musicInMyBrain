@@ -20,9 +20,4 @@ return [
         return new Client(['base_uri' => 'http://'.$directus.':8055', 'timeout' => 5.0]);
     },
 
-    'localisation.client' => function (ContainerInterface $c) {
-        $directus = gethostbyname('directus');
-        return new ClientApi(['base_uri' => 'http://'.$directus.':8055', 'timeout' => 5.0]);
-    },
-
 ];
