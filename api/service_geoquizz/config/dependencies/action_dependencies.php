@@ -2,6 +2,7 @@
 
 
 use geoquizz\service\app\actions\GetProfilAction;
+use geoquizz\service\app\actions\PostCreatePartie;
 use geoquizz\service\app\actions\SetProfilAction;
 use geoquizz\service\app\actions\GetSerieAction;
 use geoquizz\service\app\actions\GetSerieByIdAction;
@@ -20,6 +21,10 @@ return[
 
     GetHistoryAction::class => function (ContainerInterface $c){
         return new GetHistoryAction($c->get('partie.service'));
+    },
+
+    PostCreatePartie::class => function (ContainerInterface $c){
+        return new PostCreatePartie($c->get('partie.service'));
     },
 
 ];

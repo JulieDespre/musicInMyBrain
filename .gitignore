@@ -5,3 +5,4 @@
 /api/ws_geoquizz/node_modules
 **/.vscode/
 /api/rabbitmq/
+/api/directus/

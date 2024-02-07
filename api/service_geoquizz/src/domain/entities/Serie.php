@@ -13,7 +13,7 @@ class Serie extends Model
 
     public function localisation()
     {
-        return $this->hasMany(Localisation::class, "serie_id", "id");
+        return $this->hasMany(Localisation::class, "id_serie", "id");
     }
 
 }

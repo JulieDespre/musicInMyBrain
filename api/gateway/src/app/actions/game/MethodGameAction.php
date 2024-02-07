@@ -19,8 +19,14 @@ class MethodGameAction extends AbstractAction {
     public function __invoke(Request $request, Response $response, $args): Response {
         $headers = $request->getHeaders();
         $uri = $request->getUri()->getPath();
+        $method = $request->getMethod();
         $body = $request->getBody();
-        $data = $this->client->post($uri,["headers"=>$headers,"body"=>$body]);
+        if ($method == 'GET'){
+            $data = $this->client->get($uri,["headers"=>$headers,"body"=>$body]);
+        }
+        if ($method == 'POST'){
+            $data = $this->client->post($uri,["headers"=>$headers,"body"=>$body]);
+        }
         $json = json_decode($data->getBody()->getContents(),true);
         $response->getBody()->write(json_encode($json,JSON_PRETTY_PRINT));
 

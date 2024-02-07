@@ -27,15 +27,16 @@ class SsSerie
         $res = json_decode($encodeRes->getBody(), true);
         $tab = [];
         foreach ($res['data'] as $r){
-            $tab[] = new SerieDTO($r['id'], $r['nom']);
+            $tab[] = new SerieDTO($r['id'], $r['nom'], $r['photo']);
         }
         return $tab;
     }
 
     public function getSerieById(int $id)
     {
-        $series = Serie::find($id);
-        return new SerieDTO($series->id, $series->nom);
+        $encodeRes = $this->client->get("/items/serie/".$id);
+        $r = json_decode($encodeRes->getBody(), true);
+        return new SerieDTO($r['data']['id'], $r['data']['nom'], $r['data']['photo']);
     }
 
     public function getLocalisationBySerie(int $id_serie){
@@ -50,7 +51,7 @@ class SsSerie
                 $encodeResDeux = $encodeRes = $this->client->get('/items/localisation/'.$tdi);
                 $resDeux = json_decode($encodeResDeux->getBody(), true);
 
-                $tab[] = new LocalisationDTO($resDeux['data']['id'], "http://$host:8055/assets/".$resDeux['data']['image'], $resDeux['data']['map']['coordinates']);
+                $tab[] = new LocalisationDTO($resDeux['data']['id'], "http://$host:8055/assets/".$resDeux['data']['photo'], $resDeux['data']['coordonnee']['coordinates']);
             }
         return $tab;
     }
