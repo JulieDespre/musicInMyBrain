@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use geoquizz\gate\app\actions\authentification\MethodAuthentificationAction;
 use geoquizz\gate\app\actions\game\MethodGameAction;
+use geoquizz\gate\app\actions\localisation\ImageLocalAction;
 use geoquizz\gate\app\actions\localisation\MethodLocalAction;
 
 return function(\Slim\App $app):void {
@@ -45,7 +46,7 @@ return function(\Slim\App $app):void {
 
     $app->get("/items/localisation/{id}", MethodLocalAction::class);
 
-    $app->get("/assets/{id}", MethodLocalAction::class);
+    $app->get("/assets/{id}", ImageLocalAction::class);
 
     //CORS
     $app->options('/{routes:.+}', function ($request, $response, $args) {

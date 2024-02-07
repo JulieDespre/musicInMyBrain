@@ -1,9 +1,8 @@
 <?php
 
 
-use Psr\Container\ContainerInterface;
 use GuzzleHttp\Client;
-
+use Psr\Container\ContainerInterface;
 
 return [
 

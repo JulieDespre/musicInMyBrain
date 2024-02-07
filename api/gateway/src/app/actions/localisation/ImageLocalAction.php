@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
-class MethodLocalAction extends AbstractAction {
+class ImageLocalAction extends AbstractAction {
 
 
     private Client $client;
@@ -24,10 +24,11 @@ class MethodLocalAction extends AbstractAction {
                 'Authorization' => 'Bearer nQFzMw52tNnnSFLS8CmwLFLg-QYF263_',
             ]
         ]);
-        $json = json_decode($data->getBody()->getContents(),true);
-        $response->getBody()->write(json_encode($json,JSON_PRETTY_PRINT));
+        $imageContent = $data->getBody()->getContents();
+        $contentType = $data->getHeaderLine('Content-Type');
+        $response->getBody()->write($imageContent);
+        return $response->withHeader('Content-Type', $contentType);
 
-        return $response->withHeader('Content-Type', 'application/json');
     }
 
 }
