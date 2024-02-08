@@ -86,7 +86,6 @@ class SsPartie
     {
         $record = Partie_cache::where("id", $game_id)->get();
         $nbRecord = $record->count();
-        var_dump($nbRecord);
         $lastRecord = Partie_cache::where("id", $game_id)->latest("tours")->first();
 
         if ($nbRecord == 0) {

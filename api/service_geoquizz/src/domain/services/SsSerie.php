@@ -27,7 +27,7 @@ class SsSerie
         $res = json_decode($encodeRes->getBody(), true);
         $tab = [];
         foreach ($res['data'] as $r){
-            $tab[] = new SerieDTO($r['id'], $r['nom'], $r['photo']);
+            $tab[] = new SerieDTO($r['id'], $r['nom'], $r['photo'], $r['startmap']['coordinates']);
         }
         return $tab;
     }
