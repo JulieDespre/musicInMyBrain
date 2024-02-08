@@ -5,17 +5,37 @@ namespace geoquizz\service\domain\services;
 use geoquizz\service\domain\DTO\PartieDTO;
 use geoquizz\service\domain\entities\Partie;
 use geoquizz\service\domain\entities\Partie_cache;
+use geoquizz\service\domain\entities\Partie_schema;
 use GuzzleHttp\Client;
 use Ramsey\Uuid\Uuid;
 
 class SsPartie
 {
-    public function getHistory($user_id)
+
+    private SsSerie $SsSerie;
+
+    public function __construct(SsSerie $s)
     {
-        $parties = Partie::where("user_id", $user_id)->get();
+        $this->SsSerie = $s;
+    }
+
+    public function getGames()
+    {
+        $games = Partie::all();
+        $tab = [];
+        foreach ($games as $p) {
+            $tab[] = new PartieDTO($p->id, $p->user_email, $p->score, $p->difficulte, $p->serie_id);
+        }
+        return $tab;
+    }
+
+
+    public function getHistory($user_email)
+    {
+        $parties = Partie::where("user_email", $user_email)->get();
         $tab = [];
         foreach ($parties as $p) {
-            $tab[] = new PartieDTO($p->id, $p->user_id, $p->score, $p->difficulte, $p->serie_id);
+            $tab[] = new PartieDTO($p->id, $p->user_email, $p->score, $p->difficulte, $p->serie_id);
         }
         return $tab;
     }
@@ -31,19 +51,37 @@ class SsPartie
         $partieCache->tours = 0;
         $partieCache->distance = 0;
         $partieCache->temps = 0;
+        $partieCache->save();
 
         $directus = gethostbyname('directus');
-        $ssSerie = new SsSerie(new Client(['base_uri' => 'http://' . $directus . ':8055', 'timeout' => 5.0]));
-        $localisation = $ssSerie->getLocalisationBySerie($serie_id);
+        $localisation = $this->SsSerie->getLocalisationBySerie($serie_id);
+        $serie = $this->SsSerie->getSerieById($serie_id);
 
-        $partieCache->save();
+        shuffle($localisation);
+
+        $tours = 0;
+        foreach ($localisation as $l){
+            $tours += 1;
+            $schemaRecord = new Partie_schema();
+            $schemaRecord->partie_id = $game_id;
+            $schemaRecord->tours = $tours;
+            $schemaRecord->localisation_id = $l->id;
+
+            $schemaRecord->save();
+        }
+
+
 
         return [
             "game_id" => $game_id,
+            "startmap" => $serie->startmap,
             "localisations" => $localisation,
         ];
     }
 
+    //RETOUR
+    //1 : continue
+    //2 : fin
     public function playParty($game_id, $distance, $temps)
     {
         $record = Partie_cache::where("id", $game_id)->get();
@@ -102,6 +140,7 @@ class SsPartie
             }
 
             $finalRecord = new Partie();
+            $finalRecord->id = $lastRecord->id;
             $finalRecord->user_email = $lastRecord->user_email;
             $finalRecord->user_username = $lastRecord->user_username;
             $finalRecord->score = $TOTAL_T;
@@ -110,7 +149,7 @@ class SsPartie
             $finalRecord->save();
 
             $res=Partie_cache::where('id',$game_id)->delete();
-            return true;
+            return 2;
         }
 
         if ($nbRecord > 0 && $nbRecord < 10) {
@@ -126,8 +165,39 @@ class SsPartie
 
             $newRecord->save();
 
-            return true;
+            return 1;
         }
+    }
+
+    public function reCreateParty($id_game, $user_email, $user_username): array
+    {
+        $origin = Partie::where("id", $id_game)->first();
+
+        $game_id = Uuid::uuid4();
+        $partieCache = new Partie_cache();
+        $partieCache->id = $game_id;
+        $partieCache->user_email = $user_email;
+        $partieCache->user_username = $user_username;
+        $partieCache->serie_id = $origin->serie_id;
+        $partieCache->tours = 0;
+        $partieCache->distance = 0;
+        $partieCache->temps = 0;
+        $partieCache->save();
+
+        $serie = $this->SsSerie->getSerieById($origin->serie_id);
+
+        $schemaRecord = Partie_schema::where('partie_id', $id_game)->orderBy('tours', 'asc')->get();
+        $serieA = [];
+        foreach ($schemaRecord as $rec){
+            $res = $this->SsSerie->getLocalisationById($rec->localisation_id);
+            $serieA[] = $res;
+        }
+
+        return [
+            "game_id" => $game_id,
+            "startmap" => $serie->startmap,
+            "localisations" => $serieA,
+        ];
     }
 }
 

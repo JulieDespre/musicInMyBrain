@@ -30,7 +30,12 @@ class PostTourPartie extends AbstractAction
 
         try {
             $res = $this->partieService->playParty($game_id, $distance, $temps);
-            $response->getBody()->write(json_encode(["message" => $res]));
+            if ($res == 1){
+                $response->getBody()->write(json_encode(["status" => $res, "message" => "La partie continue"]));
+            } elseif ($res == 2){
+                $response->getBody()->write(json_encode(["status" => $res, "message" => "La partie est terminé"]));
+            }
+
             return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
         } catch (\Exception $e){
             $response->getBody()->write(json_encode(["message" => $e->getMessage()]));

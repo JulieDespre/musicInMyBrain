@@ -11,7 +11,8 @@ return [
     },
 
     'game.client' => function (ContainerInterface $c) {
-        return new Client(['base_uri' => 'http://service_geoquizz_php']);
+        $geoquizz = gethostbyname('service_geoquizz_php');
+        return new Client(['base_uri' => 'http://'.$geoquizz]);
     },
 
     'localisation.client' => function (ContainerInterface $c) {

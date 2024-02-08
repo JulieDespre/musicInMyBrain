@@ -7,6 +7,8 @@ use geoquizz\service\app\actions\SetProfilAction;
 use geoquizz\service\app\actions\GetSerieAction;
 use geoquizz\service\app\actions\GetSerieByIdAction;
 use geoquizz\service\app\actions\GetHistoryAction;
+use geoquizz\service\domain\services\SsPartie;
+use geoquizz\service\domain\services\SsSerie;
 use Psr\Container\ContainerInterface;
 
 return[
@@ -25,6 +27,10 @@ return[
 
     PostCreatePartie::class => function (ContainerInterface $c){
         return new PostCreatePartie($c->get('partie.service'));
+    },
+
+    SsPartie::class => function (ContainerInterface $c){
+        return new SsPartie($c->get('serie.service'));
     },
 
 ];

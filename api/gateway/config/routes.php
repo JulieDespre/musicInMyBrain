@@ -36,6 +36,10 @@ return function(\Slim\App $app):void {
 
     $app->post("/games/create",MethodGameAction::class);
 
+    $app->post("/games/recreate/{id_partie}",MethodGameAction::class);
+
+    $app->get("/games",MethodGameAction::class);
+
     $app->post("/games/play",MethodGameAction::class);
 
     $app->get("/items/serie", MethodLocalAction::class);
