@@ -18,7 +18,7 @@ export default {
         <div class="flex flex-col items-center mt-4">
           <p class="text-4xl p-2"> Retour à la home page par ici :</p>
           <button class="bg-blue-500 border-b-blue-900 hover:bg-blue-900 text-white text-2xl font-bold py-2 px-4 rounded-xl mb-10 mt-5">
-            CLick ici
+            Clic ici
           </button>
         </div>
       </RouterLink>

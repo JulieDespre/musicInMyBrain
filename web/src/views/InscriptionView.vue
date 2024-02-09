@@ -1,11 +1,17 @@
 <script>
+import togglePassword from "@/components/togglePasseword.vue";
+import {SIGNUP} from "@/apiLiens.js";
+
 export default {
+  components: {togglePassword},
   data() {
     return {
       email: null,
+      pseudo: null,
       pwd: null,
       pwdverif: null,
       inscriptionDone: false,
+      showPassword: false,
     }
   },
   methods: {
@@ -40,39 +46,95 @@ export default {
         this.inscriptionDone = true;
       }
     },
+    /**
+     * Permet de basculer entre l'affichage du mot de passe en clair et masqué
+     * @returns {void} - return true si le passeport est valide, false sinon
+     */
+    togglePassword() {
+      this.showPassword = !this.showPassword;
+    },
+
+    async userInscription() {
+      if (this.verifEmail(this.email) && this.verifMdp(this.pwd, this.pwdverif)) {
+        this.inscriptionDone = true;
+      }
+      if (this.verifEmail(this.email) && this.verifMdp(this.pwd, this.pwdverif)) {
+        try {
+          const formData = new URLSearchParams();
+          formData.append('email', this.email);
+          formData.append('pseudo', this.pseudo);
+          formData.append('mdp', this.pwd);
+
+          const response = await fetch(SIGNUP, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData.toString(),
+          });
+          console.log("C1"+response);
+          if (response.ok) {
+            console.log("C2"+response.status)
+            // Inscription réussie
+            this.inscriptionDone = true;
+            // Réinitialiser les champs
+            this.email = null;
+            this.pseudo = null;
+            this.pwd = null;
+            this.pwdverif = null;
+          } else {
+            // Gérer les erreurs de requête
+            console.error('Erreur lors de la requête:', response.status);
+          }
+        } catch (error) {
+          console.error('Erreur lors de la requête:', error);
+        }
+      }
+    },
   }
 }
 </script>
 
 <template>
-  <div v-if="!inscriptionDone" class="bg-gray-700 flex flex-col justify-center p-8 rounded-2xl m-auto">
+  <div v-if="!inscriptionDone" class="bg-gray-700 flex flex-col justify-center p-8 rounded-2xl m-auto mb-8 mt-8">
     <div>
-      <p class="text-white">Votre e-mail :</p>
-      <input v-model="email" class="w-60 mb-2.5 p-1 border-4" type="text"
-             :class="{'border-red-700': verifEmail(this.email) === false}" placeholder="Votre e-mail ...">
+      <p class="text-white mb-1">Votre e-mail</p>
+      <input v-model="email" class="w-full mb-2.5 p-1 border-4 rounded-lg" type="text"
+             :class="{'border-red-700': verifEmail(this.email) === false}" placeholder="nom.prenom@mail.fr">
       <p v-if="verifEmail(this.email) === false" class="text-red-700 font-bold mb-2">Email invalide</p>
     </div>
     <div>
-      <p class="text-white">Mot de passe :</p>
-      <input v-model="pwd" class="w-60 mb-2.5 p-1 border-4" type="password"
-             :class="{'border-red-700': verifMdp(this.pwd, this.pwdverif) === false}"
-             placeholder="Votre mot de passe ...">
+      <p class="text-white mb-1">Votre pseudo</p>
+      <input v-model="pseudo" class="w-full mb-2.5 p-1 border-4 rounded-lg" type="text"
+             placeholder="BlackWarrior">
     </div>
     <div>
-      <p class="text-white">Confirmation du mot de passe :</p>
-      <input v-model="pwdverif" class="w-60 mb-2.5 p-1 border-4" type="password"
+      <p class="text-white mb-1">Mot de passe</p>
+      <input v-if="!showPassword" v-model="pwd" class="w-full mb-2.5 p-1 border-4 rounded-lg" type="password"
              :class="{'border-red-700': verifMdp(this.pwd, this.pwdverif) === false}"
-             placeholder="Votre mot de passe ...">
+             placeholder="zmz25e12fkik">
+      <input v-else v-model="pwd" class="w-full mb-2.5 p-1 border-4 rounded-lg" type="text"
+             :class="{'border-red-700': verifMdp(this.pwd, this.pwdverif) === false}"
+             placeholder="zmz25e12fkik">
+      <div>
+        <togglePassword :showPassword="showPassword" @toggle="togglePassword" />
+      </div>
+    </div>
+    <div class ="mb-4">
+      <p class="text-white mb-1">Confirmation du mot de passe</p>
+      <input v-model="pwdverif" class="w-full mb-3 p-1 border-4 rounded-lg" type="password"
+             :class="{'border-red-500': verifMdp(this.pwd, this.pwdverif) === false}"
+             placeholder="zmz25e12fkik">
       <p v-if="verifMdp(this.pwd, this.pwdverif) === false" class="text-red-700 font-bold">Mots de passe
         incompatibles</p>
     </div>
-    <button @click="finirInscription" class="bg-blue-400 text-white hover:opacity-70 font-bold py-2 px-4 rounded">Je
+    <button @click="userInscription" class=" bg-blue-400 text-white hover:opacity-70 font-bold py-2 px-4 rounded">Je
       m'inscris
     </button>
   </div>
 
   <div v-else class="bg-gray-700 flex flex-col justify-center p-8 rounded-2xl m-auto">
-    <p class="text-white">Merci de votre inscription !</p>
+    <p class="text-white text-2xl">Merci de votre inscription !</p>
   </div>
 
 </template>
