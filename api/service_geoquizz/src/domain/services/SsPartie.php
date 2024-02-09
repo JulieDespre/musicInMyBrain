@@ -40,8 +40,11 @@ class SsPartie
         return $tab;
     }
 
-    public function createParty($serie_id, $user_email, $user_username)
+    public function createParty($serie_id, $user_email, $user_username, $difficulte)
     {
+        if ($difficulte > 3 || $difficulte < 1){
+            throw new \Exception("Mauvaise difficulté");
+        }
         $game_id = Uuid::uuid4();
         $partieCache = new Partie_cache();
         $partieCache->id = $game_id;
@@ -51,13 +54,21 @@ class SsPartie
         $partieCache->tours = 0;
         $partieCache->distance = 0;
         $partieCache->temps = 0;
+        $partieCache->difficulte = $difficulte;
         $partieCache->save();
 
-        $directus = gethostbyname('directus');
-        $localisation = $this->SsSerie->getLocalisationBySerie($serie_id);
-        $serie = $this->SsSerie->getSerieById($serie_id);
+        $allLocalisation = $this->SsSerie->getLocalisationBySerie($serie_id);
 
-        shuffle($localisation);
+        shuffle($allLocalisation);
+
+        $prise = 0;
+        if ($difficulte == 1) $prise = 8;
+        if ($difficulte == 2) $prise = 10;
+        if ($difficulte == 3) $prise = 12;
+
+        $localisation = array_slice($allLocalisation, 0, $prise);
+
+        $serie = $this->SsSerie->getSerieById($serie_id);
 
         $tours = 0;
         foreach ($localisation as $l){
@@ -66,7 +77,6 @@ class SsPartie
             $schemaRecord->partie_id = $game_id;
             $schemaRecord->tours = $tours;
             $schemaRecord->localisation_id = $l->id;
-
             $schemaRecord->save();
         }
 
@@ -87,16 +97,20 @@ class SsPartie
         $record = Partie_cache::where("id", $game_id)->get();
         $nbRecord = $record->count();
         $lastRecord = Partie_cache::where("id", $game_id)->latest("tours")->first();
+        $difficulte = $lastRecord->difficulte;
+        if ($difficulte == 1) $fin = 8;
+        if ($difficulte == 2) $fin = 10;
+        if ($difficulte == 3) $fin = 12;
 
         if ($nbRecord == 0) {
             throw new \Exception("Partie non existante");
         }
 
-        if ($nbRecord >= 11) {
+        if ($nbRecord > $fin) {
             throw new \Exception("Normalement la partie aurait du finir si ce message s'affiche c'est la faute de moi");
         }
 
-        if ($nbRecord == 10) {
+        if ($nbRecord == $fin) {
             //Todo Ajout
             $newRecord = new Partie_cache();
             $newRecord->id = $game_id;
@@ -106,11 +120,15 @@ class SsPartie
             $newRecord->tours = $nbRecord;
             $newRecord->distance = $distance;
             $newRecord->temps = $temps;
+            $newRecord->difficulte = $lastRecord->difficulte;
             $newRecord->save();
             //Todo on va calculer les pts et delete de cette table maggle
             $TOTAL_T = 0;
             $record = Partie_cache::where("id", $game_id)->get();
-            $NORME_D = 100;
+
+            if ($lastRecord->difficulte == 1) $NORME_D = 200;
+            if ($lastRecord->difficulte == 2) $NORME_D = 100;
+            if ($lastRecord->difficulte == 1) $NORME_D = 50;
             foreach ($record as $r) {
                 $SCORE_S = 0;
                 //calcul de la hess selon l'énoncé avec une norme D à 100 mètre
@@ -143,7 +161,7 @@ class SsPartie
             $finalRecord->user_email = $lastRecord->user_email;
             $finalRecord->user_username = $lastRecord->user_username;
             $finalRecord->score = $TOTAL_T;
-            $finalRecord->difficulte = 1;
+            $finalRecord->difficulte = $lastRecord->difficulte;
             $finalRecord->serie_id = $lastRecord->serie_id;
             $finalRecord->save();
 
@@ -161,6 +179,7 @@ class SsPartie
             $newRecord->tours = $nbRecord;
             $newRecord->distance = $distance;
             $newRecord->temps = $temps;
+            $newRecord->difficulte = $lastRecord->difficulte;
 
             $newRecord->save();
 
@@ -180,6 +199,7 @@ class SsPartie
         $partieCache->serie_id = $origin->serie_id;
         $partieCache->tours = 0;
         $partieCache->distance = 0;
+        $partieCache->difficulte = $origin->difficulte;
         $partieCache->temps = 0;
         $partieCache->save();
 

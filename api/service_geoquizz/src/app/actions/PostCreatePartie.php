@@ -32,8 +32,9 @@ class PostCreatePartie extends AbstractAction
         $id = $tokenRes['email'];
         $username = $tokenRes['username'];
         $serie_id = $parsedBody['serie_id'];
+        $difficulte = $parsedBody['difficulte'];
 
-        $res = $this->partieService->createParty($serie_id, $id, $username);
+        $res = $this->partieService->createParty($serie_id, $id, $username, $difficulte);
         $response->getBody()->write(json_encode($res));
 
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
