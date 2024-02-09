@@ -21,7 +21,7 @@ class MethodLocalAction extends AbstractAction {
         $uri = $request->getUri()->getPath();
         $data = $this->client->get($uri,[
             'headers' => [
-                'Authorization' => 'Bearer nQFzMw52tNnnSFLS8CmwLFLg-QYF263_',
+                'Authorization' => 'Bearer hRbLY0GQ-XJE93NYohoT6ieuqZQesBMs',
             ]
         ]);
         $json = json_decode($data->getBody()->getContents(),true);

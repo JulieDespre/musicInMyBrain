@@ -21,7 +21,7 @@ class ImageLocalAction extends AbstractAction {
         $uri = $request->getUri()->getPath();
         $data = $this->client->get($uri,[
             'headers' => [
-                'Authorization' => 'Bearer nQFzMw52tNnnSFLS8CmwLFLg-QYF263_',
+                'Authorization' => 'Bearer hRbLY0GQ-XJE93NYohoT6ieuqZQesBMs',
             ]
         ]);
         $imageContent = $data->getBody()->getContents();

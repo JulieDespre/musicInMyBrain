@@ -49,26 +49,6 @@ services:
     networks:
       - geoquizz.net
 
-  ########################################
-  # Broker de message RabbitMQ #
-  ########################################
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - '35203:15672' # interface web de gestion et administration
-      - '35204:5672'  # api pour publier et consommer des messages
-    healthcheck:
-      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
-      interval: 8s
-      timeout: 30s
-      retries: 3
-    networks:
-      - geoquizz.net
-    volumes:
-      - ../api/rabbitmq:/var/lib/rabbitmq
-    env_file: ./rab.env
-
   #############################
   ### AUTH                 ###
   #############################

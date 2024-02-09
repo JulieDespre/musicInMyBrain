@@ -1,14 +1,26 @@
-// server.js
+import {WebSocketServer, WebSocket} from 'ws';
 
-const http = require('http');
+const server = new WebSocketServer({port: 3000, clientTracking: true});
 
-const server = http.createServer((req, res) => {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello, this is a basic Node.js server!\n');
+const sendNotificationToAll = (msg) => {
+    server.clients.forEach((client_socket) => {
+        if (client_socket.readyState === WebSocket.OPEN) {
+            client_socket.send(msg);
+            console.log("Notification envoyer à tous les joueurs")
+        }
+    });
+};
+
+server.on('connection', function connection(client_socket) {
+    console.log('Client connected');
+
+    client_socket.on('message', function incoming(message) {
+        console.log('Received: %s', message);
+        sendNotificationToAll(message);
+    });
+
+    client_socket.on('close', function close() {
+        console.log('Client disconnected');
+    });
 });
 
-const port = process.env.PORT || 3000;
-
-server.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
