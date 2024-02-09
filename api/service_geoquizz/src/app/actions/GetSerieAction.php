@@ -2,7 +2,6 @@
 
 namespace geoquizz\service\app\actions;
 
-use geoquizz\service\domain\services\SsProfile;
 use geoquizz\service\domain\services\SsSerie;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

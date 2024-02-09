@@ -2,10 +2,7 @@
 
 namespace geoquizz\service\app\actions;
 
-use geoquizz\service\domain\entities\Partie_cache;
 use geoquizz\service\domain\services\SsPartie;
-use geoquizz\service\domain\services\SsProfile;
-use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -18,9 +15,6 @@ class PostTourPartie extends AbstractAction
         $this->partieService = $s;
     }
 
-    /**
-     * @throws \Exception
-     */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $parsedBody = json_decode($request->getBody(), true);

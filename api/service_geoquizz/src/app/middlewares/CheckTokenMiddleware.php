@@ -10,20 +10,23 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Exception\HttpUnauthorizedException;
 
-class CheckToken implements \Psr\Http\Server\MiddlewareInterface
+class CheckTokenMiddleware
 {
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    public function __invoke($request, $handler)
     {
-        $response = $handler->handle($request);
-        $headers = $request->getHeaders();
+
+        //Uniquement récupérer le Header Authorization pour que le chargement dure pas 3 vies
+        $authorization = $request->getHeader("Authorization");
+        $headers = [
+            "Authorization" => $authorization
+        ];
 
         $client = new Client();
         try {
-            $res = $client->request('GET', "http://auth_php/users/validate", ['headers' => $headers]);
-            $request->withAttribute('tokenValidationResult', $res);
+            $client->request('GET', "http://auth_php/users/validate", ['headers' => $headers]);
+            $response = $handler->handle($request);
         } catch (ClientException $e) {
             throw new HttpUnauthorizedException($request, "Token invalide");
-        } catch (GuzzleException $e) {
         }
         return $response;
     }
