@@ -132,7 +132,9 @@ class SsPartie
             foreach ($record as $r) {
                 $SCORE_S = 0;
                 //calcul de la hess selon l'énoncé avec une norme D à 100 mètre
-                if ($r->distance < $NORME_D) {
+                if ($r->distance == -1){
+                    $SCORE_S = 0;
+                } else if ($r->distance < $NORME_D) {
                     $SCORE_S = 5;
                 } else if ($r->distance < 2 * $NORME_D) {
                     $SCORE_S = 3;
