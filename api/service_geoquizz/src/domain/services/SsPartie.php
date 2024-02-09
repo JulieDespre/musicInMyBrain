@@ -160,9 +160,9 @@ class SsPartie
                 }
 
                 //calcul de la hess selon l'énoncé avec une norme T dans le sujet
-                if ($r->temps < 5) {
+                if ($r->temps < 20) {
                     $SCORE_S = $SCORE_S * 4;
-                } else if ($r->temps < 10) {
+                } else if ($r->temps < 50) {
                     $SCORE_S = $SCORE_S * 2;
                 } else {
                     $SCORE_S = $SCORE_S * 0;
