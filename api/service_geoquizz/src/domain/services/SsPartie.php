@@ -24,7 +24,8 @@ class SsPartie
         $games = Partie::all();
         $tab = [];
         foreach ($games as $p) {
-            $tab[] = new PartieDTO($p->id, $p->user_email, $p->score, $p->difficulte, $p->serie_id, $p->user_username);
+            $serie_nom = $this->SsSerie->getSerieById($p->serie_id);
+            $tab[] = new PartieDTO($p->id, $p->user_email, $p->score, $p->difficulte, $p->serie_id, $serie_nom->nom, $p->user_username);
         }
         return $tab;
     }
@@ -32,7 +33,8 @@ class SsPartie
     public function getGameId($id)
     {
         $p = Partie::where("id", $id)->first();
-        return new PartieDTO($p->id, $p->user_email, $p->score, $p->difficulte, $p->serie_id, $p->user_username);
+        $serie_nom = $this->SsSerie->getSerieById($p->serie_id);
+        return new PartieDTO($p->id, $p->user_email, $p->score, $p->difficulte, $p->serie_id, $serie_nom->nom, $p->user_username);
     }
 
 
@@ -41,7 +43,8 @@ class SsPartie
         $parties = Partie::where("user_email", $user_email)->get();
         $tab = [];
         foreach ($parties as $p) {
-            $tab[] = new PartieDTO($p->id, $p->user_email, $p->score, $p->difficulte, $p->serie_id, $p->user_username);
+            $serie_nom = $this->SsSerie->getSerieById($p->serie_id);
+            $tab[] = new PartieDTO($p->id, $p->user_email, $p->score, $p->difficulte, $p->serie_id, $serie_nom->nom, $p->user_username);
         }
         return $tab;
     }
