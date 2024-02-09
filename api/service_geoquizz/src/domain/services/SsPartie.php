@@ -138,7 +138,7 @@ class SsPartie
 
             if ($lastRecord->difficulte == 1) $NORME_D = 200;
             if ($lastRecord->difficulte == 2) $NORME_D = 100;
-            if ($lastRecord->difficulte == 1) $NORME_D = 50;
+            if ($lastRecord->difficulte == 3) $NORME_D = 50;
             foreach ($record as $r) {
                 $SCORE_S = 0;
                 //calcul de la hess selon l'énoncé avec une norme D à 100 mètre
