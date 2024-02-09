@@ -29,6 +29,12 @@ class SsPartie
         return $tab;
     }
 
+    public function getGameId($id)
+    {
+        $p = Partie::where("id", $id)->first();
+        return new PartieDTO($p->id, $p->user_email, $p->score, $p->difficulte, $p->serie_id, $p->user_username);
+    }
+
 
     public function getHistory($user_email)
     {
@@ -83,6 +89,10 @@ class SsPartie
 
 
         return [
+            "user_username" => $user_username,
+            "user_email" => $user_email,
+            "serie_id" => $serie_id,
+            "serie_nom" => $serie->nom,
             "game_id" => $game_id,
             "startmap" => $serie->startmap,
             "localisations" => $localisation,
@@ -215,6 +225,10 @@ class SsPartie
         }
 
         return [
+            "user_username" => $user_username,
+            "user_email" => $user_email,
+            "serie_id" => $serie->id,
+            "serie_nom" => $serie->nom,
             "game_id" => $game_id,
             "startmap" => $serie->startmap,
             "localisations" => $serieA,

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use geoquizz\service\app\actions\GetHistoryAction;
 use geoquizz\service\app\actions\GetPartie;
+use geoquizz\service\app\actions\GetPartieById;
 use geoquizz\service\app\actions\GetProfilAction;
 use geoquizz\service\app\actions\RecreatePartie;
 use geoquizz\service\app\actions\SetProfilAction;
@@ -31,6 +32,8 @@ return function( \Slim\App $app):void {
 
     $app->post("/games/play",PostTourPartie::class)
         ->addMiddleware(new CheckToken());
+
+    $app->get("/games/{id_partie}", GetPartieById::class);
 
     $app->post("/games/recreate/{id_partie}[/]", RecreatePartie::class)
         ->addMiddleware(new CheckToken());
