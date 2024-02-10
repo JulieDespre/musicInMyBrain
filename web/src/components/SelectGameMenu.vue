@@ -10,7 +10,6 @@ export default {
       difficulteSerie: [],
       difficulteRandom: "medium",
       imageUrl: "",
-      chargement: false,
       erreur: false,
     }
   },

@@ -72,9 +72,9 @@ export default {
             },
             body: formData.toString(),
           });
-          console.log("C1"+response);
+          console.log("C1" + response);
           if (response.ok) {
-            console.log("C2"+response.status)
+            console.log("C2" + response.status)
             // Inscription réussie
             this.inscriptionDone = true;
             // Réinitialiser les champs
@@ -96,12 +96,12 @@ export default {
 </script>
 
 <template>
-  <div v-if="!inscriptionDone" class="bg-gray-700 flex flex-col justify-center p-8 rounded-2xl m-auto mb-8 mt-8">
+  <div v-if="!inscriptionDone" class=" min-h-screen bg-gray-700 flex flex-col justify-center p-8 rounded-2xl m-auto mb-8 mt-8">
     <div>
       <p class="text-white mb-1">Votre e-mail</p>
       <input v-model="email" class="w-full mb-2.5 p-1 border-4 rounded-lg" type="text"
-             :class="{'border-red-700': verifEmail(this.email) === false}" placeholder="nom.prenom@mail.fr">
-      <p v-if="verifEmail(this.email) === false" class="text-red-700 font-bold mb-2">Email invalide</p>
+             :class="{'border-red-500': verifEmail(this.email) === false}" placeholder="nom.prenom@mail.fr">
+      <p v-if="verifEmail(this.email) === false" class="text-red-500 font-bold mb-2">Email invalide</p>
     </div>
     <div>
       <p class="text-white mb-1">Votre pseudo</p>
@@ -111,30 +111,45 @@ export default {
     <div>
       <p class="text-white mb-1">Mot de passe</p>
       <input v-if="!showPassword" v-model="pwd" class="w-full mb-2.5 p-1 border-4 rounded-lg" type="password"
-             :class="{'border-red-700': verifMdp(this.pwd, this.pwdverif) === false}"
-             placeholder="zmz25e12fkik">
-      <input v-else v-model="pwd" class="w-full mb-2.5 p-1 border-4 rounded-lg" type="text"
-             :class="{'border-red-700': verifMdp(this.pwd, this.pwdverif) === false}"
-             placeholder="zmz25e12fkik">
-      <div>
-        <togglePassword :showPassword="showPassword" @toggle="togglePassword" />
-      </div>
-    </div>
-    <div class ="mb-4">
-      <p class="text-white mb-1">Confirmation du mot de passe</p>
-      <input v-model="pwdverif" class="w-full mb-3 p-1 border-4 rounded-lg" type="password"
              :class="{'border-red-500': verifMdp(this.pwd, this.pwdverif) === false}"
              placeholder="zmz25e12fkik">
-      <p v-if="verifMdp(this.pwd, this.pwdverif) === false" class="text-red-700 font-bold">Mots de passe
+      <input v-else v-model="pwd" class="w-full mb-2.5 p-1 border-4 rounded-lg" type="text"
+             :class="{'border-red-500': verifMdp(this.pwd, this.pwdverif) === false}"
+             placeholder="zmz25e12fkik">
+      <div>
+        <togglePassword :showPassword="showPassword" @toggle="togglePassword"/>
+      </div>
+    </div>
+    <div class="mb-4">
+      <p class="text-white mb-1">Confirmation du mot de passe</p>
+      <input v-if="!showPassword" v-model="pwdverif" class="w-full mb-3 p-1 border-4 rounded-lg" type="password"
+             :class="{'border-red-500': verifMdp(this.pwd, this.pwdverif) === false}"
+             placeholder="zmz25e12fkik" @keyup.enter="userInscription">
+      <input v-else v-model="pwdverif" class="w-full mb-2.5 p-1 border-4 rounded-lg" type="text"
+             :class="{'border-red-500': verifMdp(this.pwd, this.pwdverif) === false}"
+             placeholder="zmz25e12fkik" @keyup.enter="userInscription">
+      <div>
+        <togglePassword :showPassword="showPassword" @toggle="togglePassword"/>
+      </div>
+      <p v-if="verifMdp(this.pwd, this.pwdverif) === false" class="text-red-500 font-bold">Mots de passe
         incompatibles</p>
     </div>
     <button @click="userInscription" class=" bg-blue-400 text-white hover:opacity-70 font-bold py-2 px-4 rounded">Je
       m'inscris
     </button>
+
+    <RouterLink to="/connexion">
+      <button
+          class="bg-stone-400 text-zinc-600 hover:bg-blue-500 hover:text-zinc-900  py-2 px-4 rounded-xl mt-10 ml-14">
+        J'ai déjà un compte
+      </button>
+    </RouterLink>
+
   </div>
 
   <div v-else class="bg-gray-700 flex flex-col justify-center p-8 rounded-2xl m-auto">
     <p class="text-white text-2xl">Merci de votre inscription !</p>
   </div>
+
 
 </template>

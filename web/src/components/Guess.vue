@@ -356,7 +356,7 @@ export default {
     <div
         class="h-screen w-screen flex justify-center items-center">
       <div class="flex flex-wrap  px-2">
-        <div class="w-full h-full md:w-3/5 border border-gray-400 rounded-lg flex flex-col justify-between mb-2">
+        <div class=" w-full h-full md:w-3/5 border border-gray-400 rounded-lg flex flex-col justify-between mb-2">
           <img class="rounded-lg" :src="image" alt="image du lieu">
           <div v-if="validate" class=" w-full rounded-b-lg h-max bg-blue-600 py-8 flex flex-col justify-center text-xl">
             <label class="text-white ml-2 ">

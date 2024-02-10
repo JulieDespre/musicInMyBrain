@@ -29,7 +29,7 @@ export default {
 </script>
 
 <template>
-  <div class="mapbox">
+  <div class="mapbox my-5">
     <h1>Test Map</h1>
     <l-map
         ref="map"
