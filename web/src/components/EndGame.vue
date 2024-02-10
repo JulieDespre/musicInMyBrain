@@ -3,6 +3,7 @@
 import {GET_SCORES} from "@/apiLiens.js";
 import Cookies from "js-cookie";
 import {VueSpinner} from 'vue3-spinners';
+import {ws} from "@/main.js";
 
 
 export default {
@@ -47,6 +48,7 @@ export default {
             this.idGame = data.id;
             this.nomUser = data.user_username;
             this.userEmail = data.user_email;
+            ws.send(this.nomUser+" a fini la série "+this.nomSerie+" avec un score de "+this.score);
           })
           .catch((error) => {
             this.error = true;

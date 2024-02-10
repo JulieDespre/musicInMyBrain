@@ -3,8 +3,9 @@ import 'leaflet/dist/leaflet.css';
 import {LMap, LTileLayer, LMarker} from '@vue-leaflet/vue-leaflet';
 import {getDistance} from "geolib";
 import Cookies from "js-cookie";
-import {CREATE_GAME, RECREATE_GAME, SCORE_PLAY} from "@/apiLiens.js";
+import {CREATE_GAME, RECREATE_GAME, SCORE_PLAY, VALIDATE_USER} from "@/apiLiens.js";
 import {VueSpinner} from 'vue3-spinners';
+import {ws} from "@/main.js";
 
 export default {
   components: {
@@ -47,6 +48,7 @@ export default {
       serie_id: null,
       difficulty: null,
       replayGame_id: null,
+      username:null,
       //serie_id récupérer grâce à l'url
 
 
@@ -174,6 +176,9 @@ export default {
               this.timerEnable = true;
               this.nomSeries = data.serie_nom;
 
+              this.notif();
+
+
 
             })
             .catch((error) => {
@@ -181,6 +186,28 @@ export default {
               this.$router.push('/selectgame');
             });
       }
+    },
+
+    /**
+     * Envoie une notification à tous
+     */
+    notif() {
+      fetch(VALIDATE_USER, {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + Cookies.get('accessToken')
+        },
+      })
+          .then(response => response.json())
+          .then(data => {
+            this.username = data.username;
+            ws.send(this.username + " débute la série " + this.nomSeries);
+
+          })
+          .catch((error) => {
+            //si erreur lors de la récupération des données de jeu redirige vers la page de jeu
+            this.$router.push('/selectgame');
+          });
     },
 
     /**
