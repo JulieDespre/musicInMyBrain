@@ -44,13 +44,13 @@ export default {
 
       // Si on a une recherche par artiste, on construit l'URL correspondante
       if (artistQuery) {
-        artistUrl = `${baseUrl}artist/?fmt=json&query=${artistQuery}`;
+        artistUrl = `${baseUrl}artist/?fmt=json&query=${artistQuery}&limit=10&offset=${this.offset}`;
         console.log(artistUrl);
         this.searchBy = "artist";
       }
       // Si on a une recherche par titre, on construit l'URL correspondante
       if (MorceauQuery) {
-        morceauUrl = `${baseUrl}recording/?fmt=json&query=${MorceauQuery}`;
+        morceauUrl = `${baseUrl}recording/?fmt=json&query=${MorceauQuery}&limit=10&offset=${this.offset}`;
         this.searchBy = "title";
       }
 
@@ -111,12 +111,19 @@ export default {
       }
     },
 
+    // Méthode pour aller à la page précédente
     async previousPage() {
       if (this.offset >= 10) {
         this.offset -= 10;
         await this.apiSearch(this.query, this.searchBy);
+      } else {
+        // Gérer le cas où l'offset devient négatif
+        this.offset = 0;
+        await this.apiSearch(this.query, this.searchBy);
       }
     },
+
+    // Méthode pour aller à la page suivante
     async nextPage() {
       this.offset += 10;
       await this.apiSearch(this.query, this.searchBy);

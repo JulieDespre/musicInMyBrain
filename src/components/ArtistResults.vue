@@ -5,22 +5,50 @@ export default {
     response: Object, // La réponse de la requête
   },
   methods: {
+    /**
+     * Récupérer la nationalité d'un artiste
+     * @param {Object} artist - L'objet représentant l'artiste
+     * @returns {string} - La nationalité de l'artiste
+     *
+     */
     getNationality(artist) {
-      console.log("responce artistes" + this.response.artists);
       if (artist.area && artist.area.name) {
         console.log("area artistes" + artist.area);
         return artist.area.name;
       } else if (artist.begin_area && artist.begin_area.name) {
         return artist.begin_area.name;
       } else {
-        return "Nationalité inconnue";
+        return "Pays inconnue";
       }
     },
+
+    /**
+     * Récupérer les genres de musique d'un artiste
+     *  @param {Object} artist - L'objet représentant l'artiste
+     * @returns {string} - Les genres de musique de l'artiste
+     *
+     */
     getGenres(artist) {
       if (artist.tags && artist.tags.length > 0) {
-        return artist.tags.map((tag) => tag.name).join(", ");
+        // Récupérer uniquement les trois premiers tags
+        const firstThreeTags = artist.tags.slice(0, 3);
+
+        // Mapper les noms des tags
+        const tagNames = firstThreeTags.map((tag) => {
+          // Séparer le tag en mots
+          const words = tag.name.split(" ");
+
+          // Récupérer les deux premiers mots
+          const firstTwoWords = words.slice(0, 2);
+
+          // Joindre les deux premiers mots avec un espace
+          return firstTwoWords.join(" ");
+        });
+
+        // Joindre les noms des tags avec une virgule
+        return tagNames.join(", ");
       } else {
-        return "Genre inconnu";
+        return "Inconnu";
       }
     },
   },
@@ -28,16 +56,28 @@ export default {
 </script>
 
 <template>
-  <div class="artist-result max-w-lg mx-auto" v-if="true">
-    <h2 class="text-xl">Artistes</h2>
-    <ul class="list-disc pl-4">
-      {{
-        response[0].name
-      }}
-      <li v-for="artist in response" :key="artist.id">
-        <div>Nom: {{ artist.name }}</div>
-        <div>Nationalité: {{ getNationality(artist) }}</div>
-        <div>Genre de musique: {{ getGenres(artist) }}</div>
+  <div
+    class="artist-result max-w-lg mx-auto w-full flew flex-wrap md:flex-row sm:flex-col justify-center lg:flex-row py-8"
+    v-if="response && response.length > 0"
+  >
+    <h2 class="text-xl">Artistes trouvé(e)s dans la base de données :</h2>
+    <ul
+      class="pl-4 flew flex-wrap md:flex-row sm:flex-col justify-center lg:flex-row py-8"
+    >
+      <li
+        v-for="artist in response"
+        :key="artist.id"
+        class="bg-gray-200 rounded-lg p-4 mb-4"
+      >
+        <!-- Contenu de chaque artiste -->
+        <div>
+          <p class="font-semibold">Nom: {{ artist.name }}</p>
+          <ul class="list-disc pl-4">
+            <li>Genre de musique: {{ getGenres(artist) }}</li>
+            <li>Pays: {{ getNationality(artist) }}</li>
+            <!-- Bouton pour en savoir plus -->
+          </ul>
+        </div>
       </li>
     </ul>
   </div>

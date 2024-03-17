@@ -21,17 +21,9 @@ export default {
   <div class="artist-results">
     <template v-if="results.length">
       <h1>Les résultats de votre recherche :</h1>
-      <ul>
-        <!-- Parcours des artistes -->
-        <li v-for="(artist, index) in results" :key="index" class="mb-4">
-          <!-- Composant de résultat d'artiste pour chaque artiste -->
-          <ArtistResult
-            :name="artist.name"
-            :disambiguation="artist.disambiguation"
-            :id="artist.id"
-          />
-        </li>
-      </ul>
+      <!-- Afficher le nombre de résultats -->
+      <p>{{ results.count }} résultats trouvés :</p>
+      <ArtistResult :response="results" />
     </template>
     <template v-else>
       <p class="text-lg text-carbon-700">
