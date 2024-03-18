@@ -8,14 +8,20 @@ export default {
 
 <template>
   <div class="greetings">
-    <div class="ml-52">
-      <div class="glitch" data-text="404 ... Oups! ">404 ... Oups!</div>
+    <div class="text-center">
+      <div class="text-7xl font-bold text-grey-400">404 ... Oups!</div>
+      <img
+        src="@/components/icons/page404.jpg"
+        alt="Page404"
+        class="logo rounded-lg w-96 h-96"
+      />
       <div class="glitch" data-text="Nous ne trouvons pas la page recherchée. ">
         Nous ne trouvons pas la page recherchée.
       </div>
     </div>
-    <img src="@/components/icons/page404.jpg" alt="Page404" class="logo" />
-    <router-link to="/">Retour vers l'accueil</router-link>
+    <button class="retourAcc px-4 py-2 rounded-lg">
+      <router-link to="/">Retour vers l'accueil</router-link>
+    </button>
   </div>
 </template>
 
@@ -66,6 +72,20 @@ h1 {
     infinite;
   color: #ff00ff;
   z-index: -2;
+}
+
+.retourAcc {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  background-color: #6962ad;
+  color: #83c0c1;
+  font-size: 1.5rem;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+  border: none;
+  outline: none;
 }
 
 @keyframes glitch-it {

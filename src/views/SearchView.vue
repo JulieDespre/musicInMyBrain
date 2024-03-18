@@ -19,6 +19,7 @@ export default {
       offset: 0,
       query: "",
       searchBy: "",
+      loading: false,
     };
   },
   methods: {
@@ -36,6 +37,8 @@ export default {
         return;
       }
 
+      this.loading = true;
+
       // URL de base de l'API MusicBrainz
       let baseUrl = "https://musicbrainz.org/ws/2/";
 
@@ -44,13 +47,13 @@ export default {
 
       // Si on a une recherche par artiste, on construit l'URL correspondante
       if (artistQuery) {
-        artistUrl = `${baseUrl}artist/?fmt=json&query=${artistQuery}&limit=10&offset=${this.offset}`;
+        artistUrl = `${baseUrl}artist/?fmt=json&query=${artistQuery}&offset=${this.offset}`;
         console.log(artistUrl);
         this.searchBy = "artist";
       }
       // Si on a une recherche par titre, on construit l'URL correspondante
       if (MorceauQuery) {
-        morceauUrl = `${baseUrl}recording/?fmt=json&query=${MorceauQuery}&limit=10&offset=${this.offset}`;
+        morceauUrl = `${baseUrl}recording/?fmt=json&query=${MorceauQuery}&offset=${this.offset}`;
         this.searchBy = "title";
       }
 
@@ -108,47 +111,44 @@ export default {
       } catch (error) {
         console.error("Erreur lors de la recherche:", error);
         this.searchTitleResults = [];
+      } finally {
+        this.loading = false;
       }
     },
 
-    // Méthode pour aller à la page précédente
-    async previousPage() {
-      if (this.offset >= 10) {
-        this.offset -= 10;
-        await this.apiSearch(this.query, this.searchBy);
-      } else {
-        // Gérer le cas où l'offset devient négatif
-        this.offset = 0;
-        await this.apiSearch(this.query, this.searchBy);
+    // Affiche la page précédente des résultats de la recherche
+    previousPage() {
+      if (this.offset >= 5) {
+        this.offset -= 5;
       }
     },
-
-    // Méthode pour aller à la page suivante
-    async nextPage() {
-      this.offset += 10;
-      await this.apiSearch(this.query, this.searchBy);
+    // Affiche la page suivante des résultats de la recherche
+    nextPage() {
+      if (this.offset <= 20) {
+        this.offset += 5;
+      }
     },
   },
 };
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col items-center">
+  <div class="min-h-screen flex flex-col items-center mb-10">
     <Search @search="apiSearch" :resetOffset="resetOffset" />
 
     <div v-if="searchBy === 'morceau'">
-      <MorceauSearch :results="searchTitleResults" />
+      <MorceauSearch :results="searchTitleResults" :offset="offset" />
     </div>
 
     <div v-if="searchBy === 'artist'">
-      <ArtistSearch :results="searchArtistResults" />
+      <ArtistSearch :results="searchArtistResults" :offset="offset" />
     </div>
 
-    <div>
+    <div class="mb-5">
       <button
         @click="previousPage"
         :disabled="offset === 0"
-        class="py-2 px-4 bg-blue-500 text-white rounded-lg mr-4"
+        class="py-2 px-2 bg-blue-500 text-white rounded-lg mr-4"
         :class="{ 'opacity-50 cursor-not-allowed': offset === 0 }"
       >
         Précédent
@@ -156,14 +156,16 @@ export default {
       <button
         @click="nextPage"
         :disabled="
-          (searchBy === 'title' && searchTitleResults.length < 10) ||
-          (searchBy === 'artist' && searchArtistResults.length < 10)
+          (searchBy === 'title' && searchTitleResults.length > 25) ||
+          (searchBy === 'artist' && searchArtistResults.length > 25) ||
+          (searchTitleResults.length === 0 && searchArtistResults.length === 0)
         "
         class="py-2 px-4 bg-blue-500 text-white rounded-lg"
         :class="{
           'opacity-50 cursor-not-allowed':
-            (searchBy === 'title' && searchTitleResults.length < 10) ||
-            (searchBy === 'artist' && searchArtistResults.length < 10),
+            offset === 20 ||
+            (searchTitleResults.length === 0 &&
+              searchArtistResults.length === 0),
         }"
       >
         Suivant

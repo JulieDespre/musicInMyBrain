@@ -12,11 +12,11 @@ export default {
 </script>
 
 <template>
-  <header>
+  <header class="mt-10 flex max-sm:flex-col max-lg:flex-row pr-5">
     <img
       alt="Vue logo"
       class="logo"
-      src="@/assets/logo.jpg"
+      src="@/assets/logo.png"
       width="125"
       height="125"
     />
@@ -24,10 +24,18 @@ export default {
     <div class="wrapper">
       <HelloWorld msg="Bienvenue sur Music in my Brain" />
 
-      <nav>
-        <RouterLink to="/">Accueil</RouterLink>
-        <RouterLink to="/search">Recherche</RouterLink>
-        <RouterLink to="/about">A propos</RouterLink>
+      <nav class="navbar">
+        <div class="nav-links justify-center max-sm:mx-auto">
+          <router-link class="nav-link" to="/">
+            <button class="btn btn-nav px-4 py-2 rounded-lg">Accueil</button>
+          </router-link>
+          <router-link class="nav-link" to="/search">
+            <button class="btn btn-nav px-4 py-2 rounded-lg">Recherche</button>
+          </router-link>
+          <router-link class="nav-link" to="/about">
+            <button class="btn btn-nav px-4 py-2 rounded-lg">A propos</button>
+          </router-link>
+        </div>
       </nav>
     </div>
   </header>
@@ -46,47 +54,86 @@ header {
   margin: 0 auto 2rem;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+@media (min-width: 100px) and (max-width: 350px) {
+  .nav-links {
+    justify-content: center; /* Centrer les boutons */
+  }
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+@media (min-width: 420px) {
+  .btn {
+    font-size: 0.875rem; /* Taille du texte réduite pour les petits écrans */
+  }
 }
 
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
+@media (min-width: 810px) {
+  .btn {
+    font-size: 1rem; /* Taille du texte normale pour les écrans moyens */
+  }
   header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+    justify-content: center;
   }
 
   .logo {
-    margin: 0 2rem 0 0;
+    width: 150px;
+    margin: 0 1rem 0 0; /* Réduire la marge à droite de l'image */
   }
 
   header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+    margin-top: 1rem; /* Réduire l'espace en haut du wrapper */
+  }
+}
+
+@media (min-width: 1440px) {
+  .btn {
+    font-size: 1.125rem; /* Taille du texte légèrement augmentée pour les grands écrans */
+  }
+  header {
+    justify-content: center;
   }
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
+  .logo {
+    width: 150px;
+    margin: 0 1rem 0 0; /* Réduire la marge à droite de l'image */
   }
+
+  header .wrapper {
+    margin-top: 1rem; /* Réduire l'espace en haut du wrapper */
+  }
+}
+
+/* Supprimez les sélecteurs CSS actuels */
+
+.btn {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  background-color: #6962ad;
+  color: #83c0c1;
+  font-size: 1.5rem;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.btn:hover {
+  background-color: #d4d4d4; /* Couleur de fond gris clair au survol */
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+}
+
+.navbar-brand,
+.nav-link {
+  margin-right: 1rem;
 }
 </style>

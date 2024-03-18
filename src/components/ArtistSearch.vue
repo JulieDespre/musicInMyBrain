@@ -13,6 +13,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    offset: {
+      type: Number,
+      default: 0,
+    },
   },
 };
 </script>
@@ -20,10 +24,12 @@ export default {
 <template>
   <div class="artist-results">
     <template v-if="results.length">
-      <h1>Les résultats de votre recherche :</h1>
+      <h1 class="text-neutral-300 font-bold">
+        Les résultats de votre recherche sont :
+      </h1>
       <!-- Afficher le nombre de résultats -->
-      <p>{{ results.count }} résultats trouvés :</p>
-      <ArtistResult :response="results" />
+
+      <ArtistResult :response="results" :offset="offset" />
     </template>
     <template v-else>
       <p class="text-lg text-carbon-700">

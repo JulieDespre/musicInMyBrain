@@ -2,7 +2,8 @@
 export default {
   name: "ArtistResult",
   props: {
-    response: Object, // La réponse de la requête
+    response: Object,
+    offset: Number, // La réponse de la requête
   },
   methods: {
     /**
@@ -52,34 +53,51 @@ export default {
       }
     },
   },
+  /**
+   * Afficher les détails de l'artiste
+   *
+   */
+  showArtistDetails: (artist) => {
+    this.$router.push({ name: "ArtistResultsView", params: { id: artist.id } });
+  },
 };
 </script>
 
 <template>
   <div
-    class="artist-result max-w-lg mx-auto w-full flew flex-wrap md:flex-row sm:flex-col justify-center lg:flex-row py-8"
+    class="artist-result max-w-lg mx-auto w-full flew flex-wrap md:flex-row sm:flex-col justify-center lg:flex-row py-2"
     v-if="response && response.length > 0"
   >
     <h2 class="text-xl">Artistes trouvé(e)s dans la base de données :</h2>
-    <ul
-      class="pl-4 flew flex-wrap md:flex-row sm:flex-col justify-center lg:flex-row py-8"
+    <div
+      class="flex flex-wrap lg:flex-row sm:flex-col items-center justify-center"
     >
-      <li
-        v-for="artist in response"
-        :key="artist.id"
-        class="bg-gray-200 rounded-lg p-4 mb-4"
+      <ul
+        class="pl-4 flew flex-wrap md:flex-row sm:flex-col justify-center lg:flex-row py-"
       >
-        <!-- Contenu de chaque artiste -->
-        <div>
-          <p class="font-semibold">Nom: {{ artist.name }}</p>
-          <ul class="list-disc pl-4">
-            <li>Genre de musique: {{ getGenres(artist) }}</li>
-            <li>Pays: {{ getNationality(artist) }}</li>
-            <!-- Bouton pour en savoir plus -->
-          </ul>
-        </div>
-      </li>
-    </ul>
+        <li v-for="n in 5" class="bg-gray-200 rounded-lg p-4 mb-4">
+          <!-- Contenu de chaque artiste -->
+          <div>
+            <p class="font-semibold">
+              Nom: {{ response[n - 1 + offset].name }}
+            </p>
+            <ul class="list-disc pl-4">
+              <li>
+                Genre de musique: {{ getGenres(response[n - 1 + offset]) }}
+              </li>
+              <li>Pays: {{ getNationality(response[n - 1 + offset]) }}</li>
+            </ul>
+            <button
+              class="bg-neutral-500 text-white px-4 py-2 rounded-md mt-2 ml-auto"
+            >
+              <router-link :to="'/artiste/' + response[n - 1 + offset].id"
+                >Plus d'informations</router-link
+              >
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
   <div v-else>
     <p>Aucun résultat trouvé.</p>
