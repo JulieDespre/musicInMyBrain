@@ -1,12 +1,14 @@
 <script>
 import { RouterLink, RouterView } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
+import Footer from "@/views/Footer.vue";
 
 export default {
   components: {
     HelloWorld,
     RouterLink,
     RouterView,
+    Footer,
   },
 };
 </script>
@@ -22,18 +24,29 @@ export default {
     />
 
     <div class="wrapper">
-      <HelloWorld msg="Bienvenue sur Music in my Brain" />
+      <HelloWorld
+        msg="Bienvenue sur Music in my Brain"
+        class="text-neutral-300"
+      />
 
-      <nav class="navbar">
+      <nav class="navbar ml-8">
         <div class="nav-links justify-center max-sm:mx-auto">
           <router-link class="nav-link" to="/">
-            <button class="btn btn-nav px-4 py-2 rounded-lg">Accueil</button>
+            <button
+              class="btn btn-nav px-4 py-2 rounded-lg max-sm:text-sm max-xs:text-xs"
+            >
+              Accueil
+            </button>
           </router-link>
           <router-link class="nav-link" to="/search">
-            <button class="btn btn-nav px-4 py-2 rounded-lg">Recherche</button>
+            <button class="btn btn-nav px-4 py-2 rounded-lg max-sm:text-sm">
+              Recherche
+            </button>
           </router-link>
           <router-link class="nav-link" to="/about">
-            <button class="btn btn-nav px-4 py-2 rounded-lg">A propos</button>
+            <button class="btn btn-nav px-4 py-2 rounded-lg max-sm:text-sm">
+              A propos
+            </button>
           </router-link>
         </div>
       </nav>
@@ -41,6 +54,7 @@ export default {
   </header>
 
   <RouterView />
+  <Footer />
 </template>
 
 <style scoped>
@@ -135,5 +149,14 @@ header {
 .navbar-brand,
 .nav-link {
   margin-right: 1rem;
+}
+
+@media screen and (max-width: 502px) {
+  .btn {
+    font-size: 20px; /* Taille de la police pour les écrans jusqu'à 502px de large */
+  }
+  footer {
+    font-size: 12px;
+  }
 }
 </style>

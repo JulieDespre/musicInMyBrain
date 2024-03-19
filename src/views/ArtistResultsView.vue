@@ -9,7 +9,6 @@ export default {
     };
   },
   mounted() {
-    // Récupération des données de l'artiste
     fetch(`https://musicbrainz.org/ws/2/artist/${this.artistId}?fmt=json`)
       .then((response) => response.json())
       .then((data) => {
@@ -245,11 +244,11 @@ export default {
 .loading {
   --speed-of-animation: 0.9s;
   --gap: 6px;
-  --first-color: #7707c2;
-  --second-color: #ba57d8;
-  --third-color: #02f684;
-  --fourth-color: #02f6a5;
-  --fifth-color: #c221f3;
+  --first-color: #6962ad;
+  --second-color: #6c39a6;
+  --third-color: #83c0c1;
+  --fourth-color: #95e7c6;
+  --fifth-color: #6962ad;
   display: flex;
   justify-content: center;
   align-items: center;

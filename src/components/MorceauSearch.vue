@@ -1,9 +1,11 @@
 <script>
-import MorceauResults from "@/components/MorceauResults.vue";
+import MorceauResults from "@/components/MorceauResults.vue"; // Importer le composant correctement
 
 export default {
   name: "MorceauSearch",
-  components: { MorceauResults },
+  components: {
+    MorceauResults,
+  },
   props: {
     results: {
       type: Array,
@@ -18,12 +20,15 @@ export default {
 </script>
 
 <template>
-  <div class="music-results max-w-lg mx-auto py-8">
+  <div class="morceau-search">
     <template v-if="results.length">
       <h1 class="text-neutral-300 font-bold">
         Les résultats de votre recherche sont :
       </h1>
-      <ArtistResult :response="results" :offset="offset" />
+      <!-- Afficher le nombre de résultats -->
+
+      <MorceauResults :response="results" :offset="offset" />
+      <!-- Utiliser morceauResults au lieu de morceauResult -->
     </template>
     <template v-else>
       <p class="text-lg text-carbon-700">
@@ -33,3 +38,7 @@ export default {
     </template>
   </div>
 </template>
+
+<style scoped>
+/* Vos styles CSS */
+</style>

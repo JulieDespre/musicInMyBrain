@@ -8,7 +8,6 @@ export default {
     ArtistResult,
   },
   props: {
-    // Corriger le nom de la prop pour correspondre à celui utilisé dans le template
     results: {
       type: Array,
       default: () => [],

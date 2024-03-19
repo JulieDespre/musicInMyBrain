@@ -37,6 +37,11 @@ export default {
         return;
       }
 
+      /*if (artistQuery.trim() === "" || MorceauQuery.trim() === "") {
+        this.error = "Veuillez saisir une valeur de recherche.";
+        return;
+      }*/
+
       this.loading = true;
 
       // URL de base de l'API MusicBrainz
@@ -104,6 +109,7 @@ export default {
         }
 
         if (MorceauData) {
+          console.log("MorceauData", MorceauData);
           this.searchTitleResults = MorceauData.recordings;
         } else {
           this.searchTitleResults = [];
@@ -124,8 +130,25 @@ export default {
     },
     // Affiche la page suivante des résultats de la recherche
     nextPage() {
-      if (this.offset <= 20) {
-        this.offset += 5;
+      // Vérifie si le nombre de résultats affichés est égal à la limite
+      if (this.searchBy === "title" && this.searchTitleResults.length >= 25) {
+        this.offset += 5; // Incrémente l'offset
+      } else if (
+        this.searchBy === "artist" &&
+        this.searchArtistResults.length >= 25
+      ) {
+        this.offset += 5; // Incrémente l'offset
+      }
+    },
+  },
+  computed: {
+    canGoNext() {
+      if (this.searchBy === "title") {
+        return this.searchTitleResults.length > 5 && this.offset < 20;
+      } else if (this.searchBy === "artist") {
+        return this.searchArtistResults.length > 5 && this.offset < 20;
+      } else {
+        return false;
       }
     },
   },
@@ -136,7 +159,7 @@ export default {
   <div class="min-h-screen flex flex-col items-center mb-10">
     <Search @search="apiSearch" :resetOffset="resetOffset" />
 
-    <div v-if="searchBy === 'morceau'">
+    <div v-if="searchBy === 'title'">
       <MorceauSearch :results="searchTitleResults" :offset="offset" />
     </div>
 
@@ -148,28 +171,31 @@ export default {
       <button
         @click="previousPage"
         :disabled="offset === 0"
-        class="py-2 px-2 bg-blue-500 text-white rounded-lg mr-4"
+        class="btn-nav py-2 px-2 bg-blue-500 text-white rounded-lg mr-4"
         :class="{ 'opacity-50 cursor-not-allowed': offset === 0 }"
       >
         Précédent
       </button>
       <button
         @click="nextPage"
-        :disabled="
-          (searchBy === 'title' && searchTitleResults.length > 25) ||
-          (searchBy === 'artist' && searchArtistResults.length > 25) ||
-          (searchTitleResults.length === 0 && searchArtistResults.length === 0)
-        "
-        class="py-2 px-4 bg-blue-500 text-white rounded-lg"
-        :class="{
-          'opacity-50 cursor-not-allowed':
-            offset === 20 ||
-            (searchTitleResults.length === 0 &&
-              searchArtistResults.length === 0),
-        }"
+        :disabled="!canGoNext"
+        class="btn-nav py-2 px-4 bg-blue-500 text-white rounded-lg"
+        :class="{ 'opacity-50 cursor-not-allowed': !canGoNext }"
       >
         Suivant
       </button>
     </div>
   </div>
 </template>
+
+<style>
+.btn-nav {
+  background-color: #83c0c1;
+  color: #6962ad;
+  transition: all 0.3s;
+}
+.btn-nav:hover {
+  background-color: #6962ad;
+  color: #83c0c1;
+}
+</style>

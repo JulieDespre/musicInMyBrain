@@ -73,9 +73,12 @@ export default {
       class="flex flex-wrap lg:flex-row sm:flex-col items-center justify-center"
     >
       <ul
-        class="pl-4 flew flex-wrap md:flex-row sm:flex-col justify-center lg:flex-row py-"
+        class="pl-4 flew flex-wrap md:flex-row sm:flex-col justify-center lg:flex-row py-2"
       >
-        <li v-for="n in 5" class="bg-gray-200 rounded-lg p-4 mb-4">
+        <li
+          v-for="n in Math.min(5, response.length)"
+          class="bg-gray-200 rounded-lg p-4 mb-4"
+        >
           <!-- Contenu de chaque artiste -->
           <div>
             <p class="font-semibold">
