@@ -16,6 +16,21 @@ export default {
       type: Number,
       default: 0,
     },
+    loading: {
+      type: Boolean,
+      default: true, // Défaut à true pour indiquer le chargement initial
+    },
+  },
+  data() {
+    return {
+      isLoading: this.loading, // Initialiser isLoading avec la valeur de loading
+    };
+  },
+  watch: {
+    // Surveiller les changements de la propriété loading
+    loading(newVal) {
+      this.isLoading = newVal; // Mettre à jour isLoading lorsque loading change
+    },
   },
 };
 </script>
@@ -23,7 +38,19 @@ export default {
 <template>
   <div class="artist-results">
     <template v-if="isLoading">
-      <p>Loading...</p>
+      <div
+        v-if="loading"
+        class="flex flex-col justify-center items-center h-3/4 mt-20 mb-16"
+      >
+        <div class="loading align-middle">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span class="mx-2 text-gray-200 font-bold">Chargement en cours...</span>
+      </div>
     </template>
     <template v-else>
       <template v-if="results.length">
