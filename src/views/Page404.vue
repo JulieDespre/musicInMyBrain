@@ -7,9 +7,11 @@ export default {
 </script>
 
 <template>
-  <div class="greetings">
+  <div class="greetings h-full">
     <div class="text-center">
-      <div class="text-7xl font-bold text-grey-400">404 ... Oups!</div>
+      <div class="text-7xl font-bold text-gray-400 mt-4 mb-4">
+        404 ... Oups!
+      </div>
       <img
         src="@/components/icons/page404.jpg"
         alt="Page404"
@@ -19,7 +21,7 @@ export default {
         Nous ne trouvons pas la page recherchée.
       </div>
     </div>
-    <button class="retourAcc px-4 py-2 rounded-lg">
+    <button class="retourAcc px-4 py-2 rounded-lg text-red mb-8">
       <router-link to="/">Retour vers l'accueil</router-link>
     </button>
   </div>
@@ -57,7 +59,7 @@ h1 {
   content: attr(data-text);
   position: absolute;
   top: 0;
-  left: 0;
+  left: 13px;
   opacity: 0.8;
 }
 
