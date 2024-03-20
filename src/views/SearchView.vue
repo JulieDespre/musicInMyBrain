@@ -12,6 +12,7 @@ export default {
     Search,
     MorceauResults,
   },
+
   data() {
     return {
       searchTitleResults: [],
@@ -19,7 +20,7 @@ export default {
       offset: 0,
       query: "",
       searchBy: "",
-      loading: false,
+      loading: true,
     };
   },
   methods: {
@@ -160,11 +161,19 @@ export default {
     <Search @search="apiSearch" :resetOffset="resetOffset" />
 
     <div v-if="searchBy === 'title'">
-      <MorceauSearch :results="searchTitleResults" :offset="offset" />
+      <MorceauSearch
+        :results="searchTitleResults"
+        :offset="offset"
+        :loading="loading"
+      />
     </div>
 
     <div v-if="searchBy === 'artist'">
-      <ArtistSearch :results="searchArtistResults" :offset="offset" />
+      <ArtistSearch
+        :results="searchArtistResults"
+        :offset="offset"
+        :loading="loading"
+      />
     </div>
 
     <div class="mb-5">

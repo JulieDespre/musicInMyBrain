@@ -2,6 +2,9 @@
 import { RouterLink, RouterView } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
 import Footer from "@/views/Footer.vue";
+import Search from "@/components/Search.vue";
+import MorceauSearch from "@/components/MorceauSearch.vue";
+import ArtistSearch from "@/components/ArtistSearch.vue";
 
 export default {
   components: {
@@ -9,6 +12,19 @@ export default {
     RouterLink,
     RouterView,
     Footer,
+    Search,
+    MorceauSearch, // Déclarez le composant MorceauSearch
+    ArtistSearch,
+  },
+
+  data() {
+    return {
+      resetOffset: Function,
+      trackResults: [],
+      searchQuery: "", // Définissez la propriété searchQuery
+      searchType: "tracks", // Définissez la propriété searchType avec une valeur par défaut
+      searchBy: "title", //
+    };
   },
 };
 </script>

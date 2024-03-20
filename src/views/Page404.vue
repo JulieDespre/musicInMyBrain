@@ -7,18 +7,23 @@ export default {
 </script>
 
 <template>
-  <div class="greetings h-full">
+  <div class="greetings h-full mb-10">
     <div class="text-center">
       <div class="text-7xl font-bold text-gray-400 mt-4 mb-4">
         404 ... Oups!
       </div>
       <img
-        src="@/components/icons/page404.jpg"
+        src="@/components/icons/page404.png"
         alt="Page404"
         class="logo rounded-lg w-96 h-96"
       />
-      <div class="glitch" data-text="Nous ne trouvons pas la page recherchée. ">
-        Nous ne trouvons pas la page recherchée.
+      <div class="glitch-container">
+        <div
+          class="glitch"
+          data-text="Nous ne trouvons pas la page recherchée. "
+        >
+          Nous ne trouvons pas la page recherchée.
+        </div>
       </div>
     </div>
     <button class="retourAcc px-4 py-2 rounded-lg text-red mb-8">
@@ -46,7 +51,7 @@ h1 {
 }
 .glitch {
   position: relative;
-  font-size: 60px;
+  font-size: 40px;
   font-weight: bold;
   color: #ffffff;
   letter-spacing: 3px;
@@ -59,7 +64,7 @@ h1 {
   content: attr(data-text);
   position: absolute;
   top: 0;
-  left: 13px;
+  left: 0px;
   opacity: 0.8;
 }
 
@@ -88,6 +93,12 @@ h1 {
   cursor: pointer;
   border: none;
   outline: none;
+}
+
+.glitch-container {
+  width: 400px;
+  height: 200px;
+  margin: 0 auto;
 }
 
 @keyframes glitch-it {
