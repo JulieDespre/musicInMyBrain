@@ -32,6 +32,26 @@ export default {
       this.isLoading = newVal; // Mettre à jour isLoading lorsque loading change
     },
   },
+  methods: {
+    // Affiche la page précédente des résultats de la recherche
+    previousPage() {
+      if (this.offset >= 5) {
+        this.$emit("update:offset", this.offset - 5); // Émettre un événement pour mettre à jour offset
+      }
+    },
+
+    // Affiche la page suivante des résultats de la recherche
+    nextPage() {
+      if (this.results.length >= 25) {
+        this.$emit("update:offset", this.offset + 5); // Émettre un événement pour mettre à jour offset
+      }
+    },
+  },
+  computed: {
+    canGoNext() {
+      return this.results.length > 5 && this.offset < 20;
+    },
+  },
 };
 </script>
 
@@ -67,9 +87,35 @@ export default {
         </p>
       </template>
     </template>
+    <div class="mb-5">
+      <button
+        @click="previousPage"
+        :disabled="offset === 0"
+        class="btn-nav py-2 px-2 rounded-lg mr-4"
+        :class="{ 'opacity-50 cursor-not-allowed': offset === 0 }"
+      >
+        Précédent
+      </button>
+      <button
+        @click="nextPage"
+        :disabled="!canGoNext"
+        class="btn-nav py-2 px-4 rounded-lg"
+        :class="{ 'opacity-50 cursor-not-allowed': !canGoNext }"
+      >
+        Suivant
+      </button>
+    </div>
   </div>
 </template>
 
 <style scoped>
-/* Ajouter des styles si nécessaire */
+.btn-nav {
+  background-color: #83c0c1;
+  color: #6962ad;
+  transition: all 0.3s;
+}
+.btn-nav:hover {
+  background-color: #6962ad;
+  color: #83c0c1;
+}
 </style>

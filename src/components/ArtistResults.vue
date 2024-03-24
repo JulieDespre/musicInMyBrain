@@ -52,13 +52,23 @@ export default {
         return "Inconnu";
       }
     },
-  },
-  /**
-   * Afficher les détails de l'artiste
-   *
-   */
-  showArtistDetails: (artist) => {
-    this.$router.push({ name: "ArtistResultsView", params: { id: artist.id } });
+
+    /**
+     * Afficher les détails de l'artiste
+     *
+     */
+    showArtistDetails(artist) {
+      if (artist && artist.id) {
+        this.$router.push({
+          name: "artiste", // Utiliser le nom de la route défini dans le fichier de configuration du routage
+          params: { id: artist.id },
+        });
+      } else {
+        console.error(
+          "L'artiste est indéfini ou ne possède pas de propriété id."
+        );
+      }
+    },
   },
 };
 </script>
@@ -66,7 +76,7 @@ export default {
 <template>
   <div
     class="artist-result max-w-lg mx-auto w-full flew flex-wrap md:flex-row sm:flex-col justify-center lg:flex-row py-2"
-    v-if="response && response.length > 0"
+    v-if="response"
   >
     <h2 class="text-xl">Artistes trouvé(e)s dans la base de données :</h2>
     <div
@@ -76,26 +86,21 @@ export default {
         class="pl-4 flew flex-wrap md:flex-row sm:flex-col justify-center lg:flex-row py-2"
       >
         <li
-          v-for="n in Math.min(5, response.length)"
+          v-for="artist in response.slice(offset, offset + 5)"
+          :key="artist.id"
           class="bg-gray-200 rounded-lg p-4 mb-4"
         >
-          <!-- Contenu de chaque artiste -->
           <div>
-            <p class="font-semibold">
-              Nom: {{ response[n - 1 + offset].name }}
-            </p>
+            <p class="font-semibold">Nom: {{ artist.name }}</p>
             <ul class="list-disc pl-4">
-              <li>
-                Genre de musique: {{ getGenres(response[n - 1 + offset]) }}
-              </li>
-              <li>Pays: {{ getNationality(response[n - 1 + offset]) }}</li>
+              <li>Genre de musique: {{ getGenres(artist) }}</li>
+              <li>Pays: {{ getNationality(artist) }}</li>
             </ul>
             <button
               class="bg-neutral-500 text-white px-4 py-2 rounded-md mt-2 ml-auto"
+              @click="showArtistDetails(artist)"
             >
-              <router-link :to="'/artiste/' + response[n - 1 + offset].id"
-                >Plus d'informations</router-link
-              >
+              Plus d'informations
             </button>
           </div>
         </li>

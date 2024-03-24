@@ -1,14 +1,9 @@
 <script>
 export default {
+  name: "MorceauResults",
   props: {
-    response: {
-      type: Array,
-      default: () => [],
-    },
-    offset: {
-      type: Number,
-      default: 0,
-    },
+    response: Object,
+    offset: Number, // La réponse de la requête
   },
   methods: {
     /**
@@ -25,8 +20,8 @@ export default {
     },
     /**
      * Convertir la durée en minutes
-     * @param {number} seconds - La durée en secondes
-     * @returns {string} - La durée en minutes (format hh:mm)
+     * @param {number} milliseconds - La durée en millisecondes
+     * @returns {string} - La durée en minutes (format mm:ss)
      */
     formatDuration(milliseconds) {
       const seconds = Math.floor(milliseconds / 1000);

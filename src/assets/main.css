@@ -37,3 +37,8 @@ a,
   }
 }
 */
+
+body {
+  font-family: "Nunito", sans-serif;
+  padding: 10px;
+}

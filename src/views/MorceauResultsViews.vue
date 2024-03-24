@@ -20,14 +20,18 @@
         <div class="bg-gray-200 p-6 rounded-lg ml-20 mr-20 mt-10 mb-10">
           <div>
             <h2 class="font-bold">{{ recording.title }}</h2>
+            recording : {{ recording }}
           </div>
           <div>
             <h2 class="">
-              Durée du morceau : {{ recording.formattedDuration }} min
+              Durée du morceau : {{ formatDuration(recording.length) }} min
             </h2>
             <h2 v-show="!recording.length">Durée non renseignée</h2>
           </div>
-          <!-- Ajout des autres éléments de contenu -->
+          <div>
+            <h2 class="">Artiste : {{ recording.artistName }}</h2>
+            <h2 v-show="!recording.artistName">Artiste non renseigné</h2>
+          </div>
         </div>
       </div>
     </div>
@@ -45,20 +49,21 @@ export default {
     return {
       loading: true,
       recording: {},
+      morceauId: this.$route.params.id,
     };
   },
   mounted() {
-    fetch(`https://musicbrainz.org/ws/2/recording/${this.id}?fmt=json`)
+    fetch(`https://musicbrainz.org/ws/2/recording/${this.morceauId}?fmt=json`)
       .then((response) => response.json())
       .then((data) => {
         const info = data;
         this.recording = {
           id: info.id,
           title: info.title,
-          artistName: this.getArtistName(info),
+          //artistName: info["artist-credit"],
           formattedDuration: this.formatDuration(info.length),
           firstReleaseDate: info["first-release-date"],
-          format: this.getFormat(info),
+          format: info.releases.media.format, //this.getFormat(info),
           country: this.getCountry(info),
           disambiguation: info.disambiguation,
           video: info.video,
@@ -79,6 +84,7 @@ export default {
      * @returns {string|null} - Nom de l'artiste
      */
     getArtistName(info) {
+      console.log(info["artist-credit"]);
       return info["artist-credit"] ? info["artist-credit"][0].name : null;
     },
 
@@ -99,13 +105,22 @@ export default {
      * @param {Object} info - Informations de l'enregistrement
      * @returns {string|null} - Format de l'enregistrement
      */
-    getFormat() {
-      return info.releases &&
+    getFormat(info) {
+      if (
+        info.releases &&
         info.releases.length > 0 &&
         info.releases[0].media &&
         info.releases[0].media.length > 0
-        ? info.releases[0].media[0].format
-        : null;
+      ) {
+        // Vérifier si la propriété "format" est définie dans les données
+        if (info.releases[0].media[0].format) {
+          return info.releases[0].media[0].format;
+        } else {
+          return "Format non spécifié"; // Ou toute autre valeur par défaut
+        }
+      } else {
+        return "Format non spécifié"; // Ou toute autre valeur par défaut
+      }
     },
 
     /**

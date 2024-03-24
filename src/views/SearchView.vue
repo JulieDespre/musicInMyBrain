@@ -27,6 +27,11 @@ export default {
     resetOffset() {
       this.offset = 0;
     },
+
+    updateOffset(newOffset) {
+      this.offset = newOffset; // Mettre à jour l'offset avec la nouvelle valeur
+    },
+
     /**
      * Effectue une recherche sur l'API MusicBrainz
      * @param {string} artistQuery - La chaîne de caractères à rechercher dans les artistes
@@ -122,36 +127,6 @@ export default {
         this.loading = false;
       }
     },
-
-    // Affiche la page précédente des résultats de la recherche
-    previousPage() {
-      if (this.offset >= 5) {
-        this.offset -= 5;
-      }
-    },
-    // Affiche la page suivante des résultats de la recherche
-    nextPage() {
-      // Vérifie si le nombre de résultats affichés est égal à la limite
-      if (this.searchBy === "title" && this.searchTitleResults.length >= 25) {
-        this.offset += 5; // Incrémente l'offset
-      } else if (
-        this.searchBy === "artist" &&
-        this.searchArtistResults.length >= 25
-      ) {
-        this.offset += 5; // Incrémente l'offset
-      }
-    },
-  },
-  computed: {
-    canGoNext() {
-      if (this.searchBy === "title") {
-        return this.searchTitleResults.length > 5 && this.offset < 20;
-      } else if (this.searchBy === "artist") {
-        return this.searchArtistResults.length > 5 && this.offset < 20;
-      } else {
-        return false;
-      }
-    },
   },
 };
 </script>
@@ -173,38 +148,10 @@ export default {
         :results="searchArtistResults"
         :offset="offset"
         :loading="loading"
+        @update:offset="updateOffset"
       />
-    </div>
-
-    <div class="mb-5">
-      <button
-        @click="previousPage"
-        :disabled="offset === 0"
-        class="btn-nav py-2 px-2 bg-blue-500 text-white rounded-lg mr-4"
-        :class="{ 'opacity-50 cursor-not-allowed': offset === 0 }"
-      >
-        Précédent
-      </button>
-      <button
-        @click="nextPage"
-        :disabled="!canGoNext"
-        class="btn-nav py-2 px-4 bg-blue-500 text-white rounded-lg"
-        :class="{ 'opacity-50 cursor-not-allowed': !canGoNext }"
-      >
-        Suivant
-      </button>
     </div>
   </div>
 </template>
 
-<style>
-.btn-nav {
-  background-color: #83c0c1;
-  color: #6962ad;
-  transition: all 0.3s;
-}
-.btn-nav:hover {
-  background-color: #6962ad;
-  color: #83c0c1;
-}
-</style>
+<style></style>

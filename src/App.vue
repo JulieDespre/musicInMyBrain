@@ -26,23 +26,54 @@ export default {
       searchBy: "title", //
     };
   },
+  // Affiche la page précédente des résultats de la recherche
+  previousPage() {
+    if (this.offset >= 5) {
+      this.offset -= 5;
+    }
+  },
+  // Affiche la page suivante des résultats de la recherche
+  nextPage() {
+    // Vérifie si le nombre de résultats affichés est égal à la limite
+    if (this.searchBy === "title" && this.searchTitleResults.length >= 25) {
+      this.offset += 5; // Incrémente l'offset
+    } else if (
+      this.searchBy === "artist" &&
+      this.searchArtistResults.length >= 25
+    ) {
+      this.offset += 5; // Incrémente l'offset
+    }
+  },
+
+  computed: {
+    canGoNext() {
+      if (this.searchBy === "title") {
+        return this.searchTitleResults.length > 5 && this.offset < 20;
+      } else if (this.searchBy === "artist") {
+        return this.searchArtistResults.length > 5 && this.offset < 20;
+      } else {
+        return false;
+      }
+    },
+  },
 };
 </script>
 
 <template>
   <header class="mt-10 flex max-sm:flex-col max-lg:flex-row pr-5">
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.png"
-      width="125"
-      height="125"
-    />
-
+    <router-link to="/">
+      <img
+        alt="Vue logo"
+        class="logo"
+        src="@/assets/logo.png"
+        width="125"
+        height="125"
+      />
+    </router-link>
     <div class="wrapper">
       <HelloWorld
         msg="Bienvenue sur Music in my Brain"
-        class="text-neutral-300"
+        class="text-neutral-300 font-extrabold"
       />
 
       <nav class="navbar ml-8">
@@ -60,7 +91,9 @@ export default {
             </button>
           </router-link>
           <router-link class="nav-link" to="/about">
-            <button class="btn btn-nav px-4 py-2 rounded-lg max-sm:text-sm">
+            <button
+              class="btn btn-nav px-4 py-2 rounded-lg max-sm:text-sm min-w-28"
+            >
               A propos
             </button>
           </router-link>
@@ -82,6 +115,8 @@ header {
 .logo {
   display: block;
   margin: 0 auto 2rem;
+  min-width: 150px;
+  min-height: 150px;
 }
 
 @media (min-width: 100px) and (max-width: 350px) {
@@ -102,6 +137,7 @@ header {
   }
   header {
     justify-content: center;
+    font-weight: extra-bold;
   }
 
   .logo {
@@ -160,6 +196,7 @@ header {
 
 .nav-links {
   display: flex;
+  white-space: nowrap; /* Empêche le texte de se couper sur plusieurs lignes */
 }
 
 .navbar-brand,
